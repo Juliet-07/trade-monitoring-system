@@ -6,8 +6,6 @@ import { TfiAgenda } from "react-icons/tfi";
 import { MdDashboard, MdLiveTv } from "react-icons/md";
 import { LuNetwork } from "react-icons/lu";
 import { IoIosPeople } from "react-icons/io";
-import { GrAnnounce } from "react-icons/gr";
-import { FaPeopleLine, FaWpexplorer } from "react-icons/fa6";
 import Icon from "../../assets/logo.png";
 import Header from "./Header";
 
@@ -39,11 +37,6 @@ const Layout = ({ children }) => {
       title: "Reports",
       icon: <IoIosPeople />,
       path: "/speakers",
-    },
-    {
-      title: "Logout",
-      icon: <IoIosPeople />,
-      path: "/",
     },
   ];
   const activeLink =

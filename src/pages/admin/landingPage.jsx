@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./navbar";
 import { PiSignOutBold } from "react-icons/pi";
+import Modal from "../../components/Modal";
 
 const AdminPage = () => {
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL1;
   const [user, setUser] = useState("");
+  const [modal, setModal] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [userDetails, setUserDetails] = useState({});
 
@@ -83,7 +85,10 @@ const AdminPage = () => {
         {/* Table */}
         <div className="p-4 flex flex-col items-center justify-center bg-white rounded shadow-lg border">
           <div className="w-full flex items-center justify-between mb-4 px-4">
-            <div className="bg-[#DB1600] w-[170px] h-[48px] rounded text-white flex items-center justify-center">
+            <div
+              className="bg-[#DB1600] w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer"
+              onClick={() => setModal(true)}
+            >
               Add New User
             </div>
             <form>
@@ -153,6 +158,110 @@ const AdminPage = () => {
           </table>
         </div>
       </div>
+      <Modal isVisible={modal} onClose={() => setModal(false)}>
+        <div className="p-6 flex flex-col items-center justify-center">
+          <div className="uppercase text-black font-serif font-bold text-xl">
+            Add New User
+          </div>
+          <form className="w-[616px] font-mono">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="mt-4">
+                <label
+                  htmlFor="details"
+                  className="block text-[#000D19] text-sm mb-2 font-semibold"
+                >
+                  First Name
+                </label>
+                <input
+                  className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  placeholder="Enter first name"
+                  name="campaignName"
+                  // value={campaignName}
+                  // onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mt-4">
+                <label
+                  htmlFor="details"
+                  className="block text-[#000D19] text-sm mb-2 font-semibold"
+                >
+                  Last Name
+                </label>
+                <input
+                  className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  placeholder="Enter last name"
+                  name="campaignName"
+                  // value={campaignName}
+                  // onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <label
+                htmlFor="details"
+                className="block text-[#000D19] text-sm mb-2 font-semibold"
+              >
+                Email
+              </label>
+              <input
+                className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                name="details"
+                placeholder="Enter email address"
+                // value={details}
+                // onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="mt-4">
+              <label
+                htmlFor="details"
+                className="block text-[#000D19] text-sm mb-2 font-semibold"
+              >
+                Phone number
+              </label>
+              <input
+                className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                name="details"
+                placeholder="Enter phone number"
+                // value={details}
+                // onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mt-4">
+              <label
+                htmlFor="details"
+                className="block text-[#000D19] text-sm mb-2 font-semibold"
+              >
+                Role
+              </label>
+              <input
+                className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                name="details"
+                placeholder="role is a dropdown"
+                // value={details}
+                // onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mt-10">
+              <button
+                type="submit"
+                className="w-full h-[48px] font-bold tracking-wide text-white bg-[#DB1600] uppercase rounded font-mono"
+                // onClick={() => setLoading(!loading)}
+              >
+                add user
+              </button>
+
+              {/* <Loader /> */}
+            </div>
+          </form>
+        </div>
+      </Modal>
     </>
   );
 };
