@@ -39,8 +39,14 @@ const Login = () => {
           let trmsUser = JSON.stringify(user.data);
           localStorage.setItem("trmsUser", trmsUser);
           console.log(user.data.role);
+          if (user.data.role && user.data.role.includes("FI_ADMIN")) {
+            navigate("/admin");
+          }
           if (user.data.role && user.data.role.includes("FI_REVIEWER")) {
-            navigate("/reviewer");
+            navigate("/reviewer/formNxp");
+          }
+          if (user.data.role && user.data.role.includes("FI_SUPERVISOR")) {
+            navigate("/supervisor/formNxp");
           }
         });
     } catch (error) {
@@ -85,11 +91,11 @@ const Login = () => {
                 <input
                   type="text"
                   className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  placeholder="Enter firstname.lastname"
                   name="email"
                   value={email}
                   onChange={handleChange}
                   required
-                  placeholder="Enter firstname.lastname"
                 />
               </div>
               <div className="mt-4">
@@ -119,10 +125,10 @@ const Login = () => {
                 <input
                   type="password"
                   className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  required
                   name="nibsspassword"
                   value={nibsspassword}
                   onChange={handleChange}
-                  required
                   placeholder="Enter nibss password"
                 />
               </div>

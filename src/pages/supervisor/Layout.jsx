@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
     {
       title: "Form NXP",
       icon: <TfiAgenda />,
-      path: "/reviewer/formNxp",
+      path: "/supervisor/formNxp",
     },
     {
       title: "Form A",
