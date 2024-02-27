@@ -21,12 +21,12 @@ const Layout = ({ children }) => {
     {
       title: "Form A",
       icon: <MdLiveTv />,
-      path: "/live",
+      path: "/supervisor/formA",
     },
     {
       title: "Form NCX",
       icon: <LuNetwork />,
-      path: "/network",
+      path: "/supervisor/formNcx",
     },
   ];
   const activeLink =

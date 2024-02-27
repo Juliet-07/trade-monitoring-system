@@ -3,7 +3,9 @@ import Layout from "./Layout";
 import { FaEye } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
 
-const SupervisorFormNXP = () => {
+const SupervisorFormA = () => {
+  const url =
+    "/v1/FormA/FormAList?orderBy=orderBy%3DupdatedAt&sort=sort%3Ddesc&size=size%3D50&page=page%3D0&gSearch=gSearch%3D&option=option%3D";
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7; // Set the number of items per page
   const data = [
@@ -164,7 +166,7 @@ const SupervisorFormNXP = () => {
   return (
     <Layout>
       <div className="text-3xl font-semibold text-red-800">
-        <h3 className="mb-5 text-md">Form NXP</h3>
+        <h3 className="mb-5 text-md">Form A</h3>
         <div className="shadow py-2 px-2">
           <h4 className="text-sm mb-5">Pending Applications</h4>
           <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
@@ -199,9 +201,12 @@ const SupervisorFormNXP = () => {
                   <td>{n.dateCreated}</td>
                   <td className="flex items-center gap-3 mt-2 w-[50px]">
                     <div className="group relative">
-                      <span className=" hover:text-black cursor-pointer">
+                      <a
+                        href={`/supervisor/formADetails/${n.applicationNumber}`}
+                        className=" hover:text-black cursor-pointer"
+                      >
                         <FaEye />
-                      </span>
+                      </a>
                       <small className="hidden group-hover:block absolute -top-4 -left-1">
                         View
                       </small>
@@ -269,9 +274,12 @@ const SupervisorFormNXP = () => {
                 <td>{n.dateCreated}</td>
                 <td className="flex items-center gap-3 mt-2 w-[50px]">
                   <div className="group relative">
-                    <span className=" hover:text-black cursor-pointer">
+                    <a
+                      href={`formA/${n.applicationNumber}`}
+                      className=" hover:text-black cursor-pointer"
+                    >
                       <FaEye />
-                    </span>
+                    </a>
                     <small className="hidden group-hover:block absolute -top-4 -left-1">
                       View
                     </small>
@@ -308,4 +316,4 @@ const SupervisorFormNXP = () => {
   );
 };
 
-export default SupervisorFormNXP;
+export default SupervisorFormA;

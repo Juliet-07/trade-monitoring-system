@@ -1,70 +1,135 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./navbar";
 import { PiSignOutBold } from "react-icons/pi";
 import Modal from "../../components/Modal";
+import { FaEye } from "react-icons/fa";
+import Select from "react-select";
+import { useForm } from "react-hook-form";
 
 const AdminPage = () => {
-  const baseURL = import.meta.env.VITE_REACT_APP_BASEURL1;
-  const [user, setUser] = useState("");
+  const navigate = useNavigate();
+  const { handleSubmit } = useForm();
+  const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
+  const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
+  const token = userInfo.token;
+  const [users, setUsers] = useState([]);
+  const [selectedRowData, setSelectedRowData] = useState({});
+  const [roles, setRoles] = useState([]);
+  const [selectedRoles, setSelectedRoles] = useState([]);
+  const [inputValue, setValue] = useState("");
   const [modal, setModal] = useState(false);
-  const [transactions, setTransactions] = useState([]);
-  const [userDetails, setUserDetails] = useState({});
 
   const infoCards = [
     {
       description: "Total no. of users",
-      figure: "222222",
+      figure: users.length,
     },
     {
       description: "No. of active users",
-      figure: transactions.length,
+      figure: users.length,
     },
     {
       description: "No. of inactive users",
-      figure: "4444444",
+      figure: 0,
     },
   ];
 
-  const getUserDetail = async (givenname) => {
-    const url = `${baseURL}/GetUserDetail?UserID=${givenname}`;
-    axios.get(url).then(async (response) => {
-      const data = response.data.result;
-      console.log({ data });
-      setUserDetails(data);
-      console.log(userDetails, "user-details");
-      const { branchCode } = data;
-      if (branchCode) await fetchPendingTransaction(branchCode);
-    });
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    role: [],
   };
 
-  const fetchPendingTransaction = async (branchCode) => {
-    const url = `${baseURL}/GetPendingTransaction?Auth_BRANCH_CODE=${branchCode}`;
-    try {
-      await axios.get(url).then((response) => {
-        console.log(response.data.result, "pending transaction");
-        setTransactions(response.data.result);
+  const [addNewUser, setAddNewUser] = useState(initialValues);
+  const { firstName, lastName, email, phoneNumber, role } = addNewUser;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAddNewUser({ ...addNewUser, [name]: value });
+  };
+
+  const handleRolesInputChange = (value) => {
+    setValue(value);
+  };
+  const handleSelectRolesChange = (value) => {
+    setSelectedRoles(value);
+    console.log(value, "selected roles");
+  };
+
+  const GetUser = () => {
+    const url = `${baseURL}/RegisterUser/GetUsers`;
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setUsers(response.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const GetRoles = () => {
+    let details;
+    let role;
+    const url = `${baseURL}/RegisterUser/GetRoles`;
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        details = response.data;
+        role = details.map((role) => {
+          return {
+            value: role.name,
+            label: role.name,
+          };
+        });
+        setRoles(role);
+        console.log(roles, "checking");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const createUser = () => {
+    const url = `${baseURL}/RegisterUser/register`;
+    const rolesArray = Array.isArray(selectedRoles.value)
+      ? selectedRoles.value
+      : [selectedRoles.value];
+    const payload = {
+      ...addNewUser,
+      role: rolesArray,
+    };
+    console.log(payload);
+    axios
+      .post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response, "response from creating user");
+        alert(response.data.message)
       });
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   useEffect(() => {
-    try {
-      const getData = async () => {
-        const user = JSON.parse(localStorage.getItem("Username"));
-        if (user !== null || user !== undefined) {
-          setUser(user);
-          console.log(user, "user");
-          if (user.givenname) await getUserDetail(user.givenname);
-        }
-      };
-      getData();
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+    GetUser();
+    GetRoles();
+    console.log(selectedRoles.value, "Selected Roles");
+  }, [selectedRoles]);
   return (
     <>
       <Navbar />
@@ -121,35 +186,38 @@ const AdminPage = () => {
                 <th className="p-4"> Name</th>
                 <th className="p-4">Email</th>
                 <th className="p-4">Phone Number</th>
-                <th className="p-4">Role</th>
+                <th className="p-4">Branch</th>
                 <th className="p-4">Status</th>
-                <th className="p-4 text-center">Action</th>
+                <th className="p-4"></th>
               </tr>
             </thead>
             <tbody>
-              {transactions.length > 0 &&
-                transactions.map((item, index) => {
+              {users.length > 0 &&
+                users.map((user, index) => {
                   return (
                     <tr key={index}>
                       <td className="px-6 whitespace-nowrap">
-                        {item?.payerName}
-                        {item?.name}
+                        {`${user?.firstName} ${user?.lastName}`}
                       </td>
+                      <td className="p-4 whitespace-nowrap">{user?.email}</td>
                       <td className="p-4 whitespace-nowrap">
-                        {item?.transactionReference}
+                        {user?.phoneNumber}
                       </td>
-                      <td className="p-4 whitespace-nowrap">
-                        {item?.totalAmount}
+                      <td className="p-4 whitespace-nowrap">{user?.branch}</td>
+                      <td
+                        className={`p-4 whitespace-nowrap ${
+                          user?.isActive ? "text-green-500" : "text-red-500"
+                        }`}
+                      >
+                        {user?.isActive ? "Active" : "Inactive"}
                       </td>
-                      <td className="p-4 whitespace-nowrap">
-                        {item?.requestDate}
-                      </td>
-                      <td className="p-4 whitespace-nowrap">
-                        {item?.initialisedBy}
-                      </td>
-                      <td className="p-4 whitespace-nowrap">status</td>
-                      <td className="text-[#B72727] rounded-xl text-center">
-                        View
+                      <td className="p-4 text-black cursor-pointer">
+                        <FaEye
+                          onClick={() => {
+                            setSelectedRowData(user?.userID);
+                            navigate(`/userPage/${user?.userID}`);
+                          }}
+                        />
                       </td>
                     </tr>
                   );
@@ -159,11 +227,14 @@ const AdminPage = () => {
         </div>
       </div>
       <Modal isVisible={modal} onClose={() => setModal(false)}>
-        <div className="p-6 flex flex-col items-center justify-center">
+        <div className="p-6 flex flex-col users-center justify-center">
           <div className="uppercase text-black font-serif font-bold text-xl">
             Add New User
           </div>
-          <form className="w-[616px] font-mono">
+          <form
+            className="w-[616px] font-mono"
+            onSubmit={handleSubmit(createUser)}
+          >
             <div className="grid grid-cols-2 gap-4">
               <div className="mt-4">
                 <label
@@ -175,9 +246,9 @@ const AdminPage = () => {
                 <input
                   className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
                   placeholder="Enter first name"
-                  name="campaignName"
-                  // value={campaignName}
-                  // onChange={handleChange}
+                  name="firstName"
+                  value={firstName}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -191,9 +262,9 @@ const AdminPage = () => {
                 <input
                   className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
                   placeholder="Enter last name"
-                  name="campaignName"
-                  // value={campaignName}
-                  // onChange={handleChange}
+                  name="lastName"
+                  value={lastName}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -207,11 +278,12 @@ const AdminPage = () => {
                 Email
               </label>
               <input
+                type="email"
                 className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                name="details"
+                name="email"
                 placeholder="Enter email address"
-                // value={details}
-                // onChange={handleChange}
+                value={email}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -225,10 +297,10 @@ const AdminPage = () => {
               </label>
               <input
                 className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                name="details"
                 placeholder="Enter phone number"
-                // value={details}
-                // onChange={handleChange}
+                name="phoneNumber"
+                value={phoneNumber}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -239,25 +311,21 @@ const AdminPage = () => {
               >
                 Role
               </label>
-              <input
-                className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                name="details"
-                placeholder="role is a dropdown"
-                // value={details}
-                // onChange={handleChange}
-                required
+              <Select
+                options={roles}
+                defaultValue={selectedRoles}
+                onChange={handleSelectRolesChange}
+                onInputChange={handleRolesInputChange}
+                isMulti
               />
             </div>
             <div className="mt-10">
               <button
                 type="submit"
                 className="w-full h-[48px] font-bold tracking-wide text-white bg-[#DB1600] uppercase rounded font-mono"
-                // onClick={() => setLoading(!loading)}
               >
                 add user
               </button>
-
-              {/* <Loader /> */}
             </div>
           </form>
         </div>

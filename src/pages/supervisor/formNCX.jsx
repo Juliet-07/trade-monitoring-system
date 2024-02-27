@@ -3,7 +3,7 @@ import Layout from "./Layout";
 import { FaEye } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
 
-const SupervisorFormNXP = () => {
+const SupervisorFormNCX = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7; // Set the number of items per page
   const data = [
@@ -164,7 +164,7 @@ const SupervisorFormNXP = () => {
   return (
     <Layout>
       <div className="text-3xl font-semibold text-red-800">
-        <h3 className="mb-5 text-md">Form NXP</h3>
+        <h3 className="mb-5 text-md">Form NCP</h3>
         <div className="shadow py-2 px-2">
           <h4 className="text-sm mb-5">Pending Applications</h4>
           <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
@@ -308,4 +308,4 @@ const SupervisorFormNXP = () => {
   );
 };
 
-export default SupervisorFormNXP;
+export default SupervisorFormNCX;

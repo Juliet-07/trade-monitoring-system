@@ -25,7 +25,7 @@ const Navbar = () => {
       <NavLink to="/admin" className="w-[250px]">
         <img src={Logo} />
       </NavLink>
-      <div className="flex gap-4 font-mono">
+      {/* <div className="flex gap-4 font-mono">
         <NavLink to="/admin/formNxp" style={activeStyle} className="p-2">
           Form NXP
         </NavLink>
@@ -35,7 +35,7 @@ const Navbar = () => {
         <NavLink to="/admin/formNcp" style={activeStyle} className="p-2">
           Form NCP
         </NavLink>
-      </div>
+      </div> */}
       <div className="flex items-center">
         <div className="w-10 h-10 rounded-full border border-red-600 bg-slate-300 mx-2 text-white flex items-center justify-center">
           <IoMdPerson size={20} />

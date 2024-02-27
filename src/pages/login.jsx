@@ -39,7 +39,7 @@ const Login = () => {
           let trmsUser = JSON.stringify(user.data);
           localStorage.setItem("trmsUser", trmsUser);
           console.log(user.data.role);
-          if (user.data.role && user.data.role.includes("FI_ADMIN")) {
+          if (user.data.role && user.data.role.includes("SUPER_ADMIN")) {
             navigate("/admin");
           }
           if (user.data.role && user.data.role.includes("FI_REVIEWER")) {
