@@ -117,13 +117,13 @@ const Login = () => {
                   NIBSS Password
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
                   name="nibsspassword"
                   value={nibsspassword}
                   onChange={handleChange}
                   required
-                  placeholder="Enter soft token"
+                  placeholder="Enter nibss password"
                 />
               </div>
               <div className="mt-10">
