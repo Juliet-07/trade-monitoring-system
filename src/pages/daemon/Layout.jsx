@@ -11,17 +11,17 @@ const Layout = ({ children }) => {
     {
       title: "Form NXP",
       icon: <TfiAgenda />,
-      path: "/supervisor/formNxp",
+      path: "/daemon/formNxp",
     },
     {
       title: "Form A",
       icon: <SiFormstack />,
-      path: "/supervisor/formA",
+      path: "/daemon/formA",
     },
     {
       title: "Form NCX",
       icon: <LuNetwork />,
-      path: "/supervisor/formNcx",
+      path: "/daemon/formNcx",
     },
   ];
   const activeLink =

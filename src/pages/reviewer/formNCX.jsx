@@ -5,27 +5,27 @@ import Layout from "./Layout";
 import { FaEye } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
 
-const SupervisorFormA = () => {
+const ReviewerFormNCX = () => {
   const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7; // Set the number of items per page
-  const [pendingFormA, setPendingFormA] = useState([]);
-  const [processedFormA, setProcessedFormA] = useState([]);
+  const [pendingNCX, setPendingNCX] = useState([]);
+  const [processedncx, setProcessedncx] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState({});
 
   // Logic to paginate the data
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = pendingFormA.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = pendingNCX.slice(indexOfFirstItem, indexOfLastItem);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const GetPendingFormA = () => {
-    const url = `${baseURL}/v1/FormA/PendingFormAList`;
+  const GetPendingFormNCX = () => {
+    const url = `${baseURL}/NCX/GetPendingFormNCX`;
     let data;
     axios
       .get(url, {
@@ -35,15 +35,15 @@ const SupervisorFormA = () => {
         },
       })
       .then((response) => {
-        console.log(response.data, "Pending Form A");
+        console.log(response.data, "Pending NCX");
         data = response.data.responseResult.content;
-        setPendingFormA(data);
+        setPendingNCX(data);
       })
       .catch((err) => console.log(err));
   };
 
-  const GetProcessedFormA = () => {
-    const url = `${baseURL}/v1/FormA/FormAList`;
+  const GetProcessedNCX = () => {
+    const url = `${baseURL}/NCX/FormNCXLists`;
     let data;
     axios
       .get(url, {
@@ -53,16 +53,16 @@ const SupervisorFormA = () => {
         },
       })
       .then((response) => {
-        console.log(response.data, "Processed Form A");
+        console.log(response.data, "Processed NCX");
         data = response.data.responseResult.content;
-        setProcessedFormA(data);
+        setProcessedncx(data);
       })
       .catch((err) => console.log(err));
   };
 
   useEffect(() => {
-    GetPendingFormA();
-    GetProcessedFormA();
+    GetPendingFormNCX();
+    GetProcessedNCX();
   }, []);
   return (
     <Layout>
@@ -75,8 +75,7 @@ const SupervisorFormA = () => {
                 <td>Application No.</td>
                 <td>Form Number</td>
                 <td>Applicant Name</td>
-                <td>FoB Value($)</td>
-                <td>NESS Levy (N)</td>
+                <td>Branch</td>
                 <td>Last Modified</td>
                 <td className="text-yellow-600">Stage</td>
                 <td>Date Created</td>
@@ -84,28 +83,29 @@ const SupervisorFormA = () => {
               </tr>
             </thead>
             <tbody>
-              {pendingFormA.map((a, index) => (
+              {pendingNCX.map((ncx, index) => (
                 <tr
                   key={index}
                   className={`h-10 text-center ${
-                    parseInt(a.applicationNumber) % 2 === 1 ? "bg-gray-200" : ""
+                    parseInt(ncx.applicationNumber) % 2 === 1
+                      ? "bg-gray-200"
+                      : ""
                   }`}
                 >
-                  <td>{a.applicationNumber}</td>
-                  <td>{a.formNumber}</td>
-                  <td>{a.applicantName}</td>
-                  <td>$ {a.initialShipmentTotalDollarFoB}</td>
-                  <td>N {a.initialShipmentNessLevyPayable}</td>
-                  <td>{a.updatedAt}</td>
-                  <td className="text-yellow-600">{a.statusCode}</td>
-                  <td>{a.createdAt}</td>
+                  <td>{ncx.applicationNumber}</td>
+                  <td>{ncx.formNumber}</td>
+                  <td>{ncx.applicantName}</td>
+                  <td>{ncx.processingBankBranchName}</td>
+                  <td>{ncx.updatedAt}</td>
+                  <td className="text-yellow-600">{ncx.statusCode}</td>
+                  <td>{ncx.createdAt}</td>
                   <td className="flex items-center p-4">
                     <div className="group relative">
                       <span className=" hover:text-black cursor-pointer">
                         <FaEye
                           onClick={() => {
-                            setSelectedRowData(a.id);
-                            navigate(`/Daemon-formADetails/${a.id}`);
+                            setSelectedRowData(ncx.id);
+                            navigate(`/Daemon-formncxDetails/${ncx.id}`);
                           }}
                         />
                       </span>
@@ -130,7 +130,7 @@ const SupervisorFormA = () => {
       </div>
       {/* Pagination */}
       <div className="flex justify-center mt-4">
-        {[...Array(Math.ceil(pendingFormA.length / itemsPerPage)).keys()].map(
+        {[...Array(Math.ceil(pendingNCX.length / itemsPerPage)).keys()].map(
           (number) => (
             <button
               key={number + 1}
@@ -150,8 +150,7 @@ const SupervisorFormA = () => {
               <td>Application No.</td>
               <td>Form Number</td>
               <td>Applicant Name</td>
-              <td>FoB Value($)</td>
-              <td>NESS Levy(N)</td>
+              <td>Branch</td>
               <td>Last Modified</td>
               <td className="text-yellow-600">Stage</td>
               <td>Date Created</td>
@@ -159,21 +158,20 @@ const SupervisorFormA = () => {
             </tr>
           </thead>
           <tbody>
-            {processedFormA.map((nxp, index) => (
+            {processedncx.map((ncx, index) => (
               <tr
                 key={index}
                 className={`h-10 text-center ${
-                  parseInt(nxp.applicationNumber) % 2 === 1 ? "bg-gray-200" : ""
+                  parseInt(ncx.applicationNumber) % 2 === 1 ? "bg-gray-200" : ""
                 }`}
               >
-                <td>{nxp.applicationNumber}</td>
-                <td>{nxp.formNumber}</td>
-                <td>{nxp.applicantName}</td>
-                <td>$ {nxp.initialShipmentTotalDollarFoB}</td>
-                <td>N {nxp.initialShipmentNessLevyPayable}</td>
-                <td>{nxp.updatedAt}</td>
-                <td className="text-yellow-600">{nxp.statusCode}</td>
-                <td>{nxp.createdAt}</td>
+                <td>{ncx.applicationNumber}</td>
+                <td>{ncx.formNumber}</td>
+                <td>{ncx.applicantName}</td>
+                <td>{ncx.processingBankBranchName}</td>
+                <td>{ncx.updatedAt}</td>
+                <td className="text-yellow-600">{ncx.statusCode}</td>
+                <td>{ncx.createdAt}</td>
                 <td className="flex items-center p-4">
                   <div className="group relative">
                     <span className=" hover:text-black cursor-pointer">
@@ -202,4 +200,4 @@ const SupervisorFormA = () => {
   );
 };
 
-export default SupervisorFormA;
+export default ReviewerFormNCX;

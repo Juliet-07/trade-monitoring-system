@@ -42,6 +42,9 @@ const Login = () => {
           if (user.data.role && user.data.role.includes("SUPER_ADMIN")) {
             navigate("/admin");
           }
+          if (user.data.role && user.data.role.includes("FI_DAEMON")) {
+            navigate("/daemon/formNxp");
+          }
           if (user.data.role && user.data.role.includes("FI_REVIEWER")) {
             navigate("/reviewer/formNxp");
           }

@@ -5,7 +5,7 @@ import Layout from "./Layout";
 import { FaEye } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
 
-const SupervisorFormA = () => {
+const ReviewerFormA = () => {
   const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
@@ -202,4 +202,4 @@ const SupervisorFormA = () => {
   );
 };
 
-export default SupervisorFormA;
+export default ReviewerFormA;
