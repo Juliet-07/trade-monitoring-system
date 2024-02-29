@@ -105,7 +105,7 @@ const ReviewerFormNCX = () => {
                         <FaEye
                           onClick={() => {
                             setSelectedRowData(ncx.id);
-                            navigate(`/Daemon-formncxDetails/${ncx.id}`);
+                            navigate(`/Reviewer-formNcxDetails/${ncx.id}`);
                           }}
                         />
                       </span>
@@ -175,7 +175,12 @@ const ReviewerFormNCX = () => {
                 <td className="flex items-center p-4">
                   <div className="group relative">
                     <span className=" hover:text-black cursor-pointer">
-                      <FaEye />
+                      <FaEye
+                        onClick={() => {
+                          setSelectedRowData(ncx.id);
+                          navigate(`/Reviewer-formNcxDetails/${ncx.id}`);
+                        }}
+                      />
                     </span>
                     <small className="hidden group-hover:block absolute -top-4 -left-1">
                       View

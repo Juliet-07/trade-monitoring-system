@@ -105,7 +105,7 @@ const DaemonFormNCX = () => {
                         <FaEye
                           onClick={() => {
                             setSelectedRowData(ncx.id);
-                            navigate(`/Daemon-formncxDetails/${ncx.id}`);
+                            navigate(`/Daemon-formNcxDetails/${ncx.id}`);
                           }}
                         />
                       </span>
@@ -143,7 +143,7 @@ const DaemonFormNCX = () => {
         )}
       </div>
       <div className="shadow py-2 px-2 font-semibold font-mono">
-        <h4 className="text-sm mb-5 text-green-500">Processed Applications</h4>
+        <h4 className="text-sm mb-5 text-green-500"> Applications</h4>
         <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
           <thead className="h-10 border-b">
             <tr className="text-center">
@@ -175,7 +175,12 @@ const DaemonFormNCX = () => {
                 <td className="flex items-center p-4">
                   <div className="group relative">
                     <span className=" hover:text-black cursor-pointer">
-                      <FaEye />
+                      <FaEye
+                        onClick={() => {
+                          setSelectedRowData(ncx.id);
+                          navigate(`/Daemon-formNcxDetails/${ncx.id}`);
+                        }}
+                      />
                     </span>
                     <small className="hidden group-hover:block absolute -top-4 -left-1">
                       View

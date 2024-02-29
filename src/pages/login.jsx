@@ -123,7 +123,7 @@ const Login = () => {
                   htmlFor="password"
                   className="block text-sm text-gray-800"
                 >
-                  NIBSS Password
+                  TRMS Password
                 </label>
                 <input
                   type="password"
@@ -132,7 +132,7 @@ const Login = () => {
                   name="nibsspassword"
                   value={nibsspassword}
                   onChange={handleChange}
-                  placeholder="Enter nibss password"
+                  placeholder="Enter trms password"
                 />
               </div>
               <div className="mt-10">

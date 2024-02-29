@@ -70,8 +70,8 @@ const AdminPage = () => {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setUsers(response.data);
+        console.log(response.data.data);
+        setUsers(response.data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -104,9 +104,7 @@ const AdminPage = () => {
 
   const createUser = () => {
     const url = `${baseURL}/RegisterUser/register`;
-    const rolesArray = Array.isArray(selectedRoles.value)
-      ? selectedRoles.value
-      : [selectedRoles.value];
+    const rolesArray = selectedRoles.map((role) => role.value);
     const payload = {
       ...addNewUser,
       role: rolesArray,
@@ -121,14 +119,14 @@ const AdminPage = () => {
       })
       .then((response) => {
         console.log(response, "response from creating user");
-        alert(response.data.message)
+        alert(response.data.message);
       });
   };
 
   useEffect(() => {
     GetUser();
     GetRoles();
-    console.log(selectedRoles.value, "Selected Roles");
+    console.log(selectedRoles, "Selected Roles");
   }, [selectedRoles]);
   return (
     <>

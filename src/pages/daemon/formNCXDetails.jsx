@@ -5,7 +5,7 @@ import Header from "./Header";
 import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
 
-const DaemonFormADetails = () => {
+const DaemonFormNCXDetails = () => {
   const { id: ID } = useParams();
   //   console.log(userID, "id");
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
@@ -15,7 +15,7 @@ const DaemonFormADetails = () => {
   const [modal, setModal] = useState(false);
 
   const GetFormDetailsById = () => {
-    const url = `${baseURL}/v1/FormA/FormADetails?formID=${ID}`;
+    const url = `${baseURL}/NCX/NCXFormDeatails?NcxForm_ID=${ID}`;
     axios
       .get(url, {
         headers: {
@@ -39,7 +39,7 @@ const DaemonFormADetails = () => {
       <Header />
       <div className="p-10">
         <Link
-          to="/daemon/formA"
+          to="/daemon/formNcx"
           className="flex items-center p-2 w-[85px] h-10 border border-gray-100 rounded-lg"
         >
           <TbArrowBackUp color="#475467" />
@@ -89,7 +89,7 @@ const DaemonFormADetails = () => {
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
                   <span className="text-gray-600">Name:</span>{" "}
-                  {formDetails?.applicantName}
+                  {formDetails?.contact?.firstName}
                 </p>
                 <p>
                   <span className="text-gray-600">Email:</span>{" "}
@@ -97,7 +97,7 @@ const DaemonFormADetails = () => {
                 </p>
                 <p>
                   <span className="text-gray-600">BVN:</span>{" "}
-                  {formDetails?.applicantTINBVN}
+                  {formDetails?.contact?.bvn}
                 </p>
                 <p>
                   <span className="text-gray-600">Phone Number:</span>{" "}
@@ -110,7 +110,7 @@ const DaemonFormADetails = () => {
               </div>
             </div>
             {/* 3 */}
-            {/* <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[400px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
                 Documents
               </div>
@@ -135,9 +135,9 @@ const DaemonFormADetails = () => {
                   </>
                 ))}
               </div>
-            </div> */}
+            </div>
             {/* 4 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[290px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
                 Bank Details
               </div>
@@ -160,36 +160,85 @@ const DaemonFormADetails = () => {
                   </span>{" "}
                   {formDetails?.accountNumber}
                 </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Exchange Rate:</span>{" "}
+                  {formDetails?.exchangeRate}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Estimated Value of Goods (Naira):
+                  </span>{" "}
+                  N {formDetails?.estimatedValueOfGoodsNaira}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Estimated Value of Goods (Dollars):
+                  </span>{" "}
+                  $ {formDetails?.estimatedValueOfGoodsDollar}
+                </p>
               </div>
             </div>
             {/* 5 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[420px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Trade Services
+                Shipment Details
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
                   <span className="text-gray-600 text-xs">
-                    Is Valid For FOREX:
+                    Purpose of Shipment:
                   </span>{" "}
-                  {formDetails?.validForForex}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Trade Category:</span>{" "}
-                  {formDetails?.transactionPurpose?.tradeCategory?.name}
+                  {formDetails?.shipmentPurpose?.name}
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">
-                    Transaction Purpose:
+                    Port of Shipment:
                   </span>{" "}
-                  {formDetails?.transactionPurpose?.name}
+                  {formDetails?.portShipment?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Destination Country:
+                  </span>{" "}
+                  {formDetails?.portDischarge?.country?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Port of Discharge:
+                  </span>{" "}
+                  {formDetails?.portDischarge?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Expected Shipment Date:
+                  </span>{" "}
+                  {formDetails?.expectedShipmentDate}
+                </p>
+
+                <p>
+                  <span className="text-gray-600 text-xs">By Order Of:</span>{" "}
+                  {formDetails?.byOrderOf}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Shipper Name:</span>{" "}
+                  {formDetails?.shipperName}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Shipper Phone:</span>{" "}
+                  {formDetails?.shipperPhone}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Shipper Address:
+                  </span>{" "}
+                  {formDetails?.shipperAddress}
                 </p>
               </div>
             </div>
             {/* 6 */}
-            <div className="w-[405px] h-[310px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[400px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Beneficiary Information
+                Consignee Information
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
@@ -201,17 +250,15 @@ const DaemonFormADetails = () => {
                   {formDetails?.consigneeEmail}
                 </p>
                 <p>
-                  <span className="text-gray-600 text-xs">
-                    Passport Number:
-                  </span>{" "}
-                  {formDetails?.consigneeAddressLine1}
-                </p>
-                <p>
                   <span className="text-gray-600 text-xs">Phone Number:</span>{" "}
                   {formDetails?.consigneePhone}
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">Address Line 1:</span>{" "}
+                  {formDetails?.consigneeAddressLine1}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Address Line 2:</span>{" "}
                   {formDetails?.consigneeAddressLine1}
                 </p>
                 <p>
@@ -222,58 +269,58 @@ const DaemonFormADetails = () => {
                   <span className="text-gray-600 text-xs">State:</span>{" "}
                   {formDetails?.consigneeAddressState}
                 </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Country:</span>{" "}
+                  {formDetails?.consigneeCountry?.name}
+                </p>
               </div>
             </div>
             {/* 7 */}
             <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Requested Information
+                Shipping/Bill of Lading
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
-                  <span className="text-gray-600 text-xs">
-                    Amount Requested:
-                  </span>{" "}
-                  {formDetails?.pia?.name}
+                  <span className="text-gray-600 text-xs">Shipping Line:</span>{" "}
+                  {formDetails?.shippingLine?.name}
                 </p>
               </div>
             </div>
             {/* 8 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
-              <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Travel Information
-              </div>
-              <div className="px-4 py-2 grid gap-4 text-sm">
-                <p>
-                  <span className="text-gray-600 text-xs">
-                    Destination Country:
-                  </span>{" "}
-                  {formDetails?.pia?.name}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Ait Ticket No.:</span>{" "}
-                  {formDetails?.pia?.name}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Airline Route:</span>{" "}
-                  {formDetails?.pia?.name}
-                </p>
-              </div>
-            </div>
           </div>
-          <div>Workflow Notes</div>
-          {formDetails?.workflowNotes?.map((note) => (
-            <div>
-              <p>
-                <span className="text-gray-600 text-xs">Airline Route:</span>{" "}
-                {note?.name}
-              </p>
-            </div>
-          ))}
+          <div className="w-full shadow p-2 font-semibold font-mono border">
+            <h4 className="text-sm mb-5 text-green-500">Items</h4>
+            <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
+              <thead className="h-10 border-b">
+                <tr>
+                  <td>HS Code</td>
+                  <td>Packaging Mode</td>
+                  {/* <td>Applicant Name</td> */}
+                  <td>Unit of Measurement</td>
+                  <td>Quantity</td>
+                  <td>Net Weight</td>
+                  <td>Gross Weight</td>
+                </tr>
+              </thead>
+              <tbody>
+                {formDetails?.items?.map((item, index) => (
+                  <tr key={index} className="h-10 bg-gray-50">
+                    <td>{item?.hsCode?.name}</td>
+                    <td>{item?.packagingMode?.name}</td>
+                    <td>{item?.unitOfMeasurement?.name}</td>
+                    <td>{item?.quantity}</td>
+                    <td>{item?.netWeight}</td>
+                    <td>{item?.grossWeight}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>
   );
 };
 
-export default DaemonFormADetails;
+export default DaemonFormNCXDetails;

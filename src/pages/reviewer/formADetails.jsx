@@ -5,7 +5,7 @@ import Header from "./Header";
 import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
 
-const DaemonFormNCXDetails = () => {
+const ReviewerFormADetails = () => {
   const { id: ID } = useParams();
   //   console.log(userID, "id");
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
@@ -15,7 +15,7 @@ const DaemonFormNCXDetails = () => {
   const [modal, setModal] = useState(false);
 
   const GetFormDetailsById = () => {
-    const url = `${baseURL}/NXP/FormnxpDetails?formID=${ID}`;
+    const url = `${baseURL}/v1/FormA/FormADetails?formID=${ID}`;
     axios
       .get(url, {
         headers: {
@@ -39,7 +39,7 @@ const DaemonFormNCXDetails = () => {
       <Header />
       <div className="p-10">
         <Link
-          to="/daemon/formNxp"
+          to="/reviewer/formA"
           className="flex items-center p-2 w-[85px] h-10 border border-gray-100 rounded-lg"
         >
           <TbArrowBackUp color="#475467" />
@@ -93,26 +93,26 @@ const DaemonFormNCXDetails = () => {
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
                   <span className="text-gray-600">Name:</span>{" "}
-                  {formDetails.contact.name}
+                  {formDetails?.contact?.name}
                 </p>
                 <p>
                   <span className="text-gray-600">Email:</span>{" "}
-                  {formDetails.contact.emailAddress}
+                  {formDetails?.contact?.emailAddress}
                 </p>
                 <p>
-                  <span className="text-gray-600">TIN:</span> {formDetails.tin}
+                  <span className="text-gray-600">TIN:</span> {formDetails?.tin}
                 </p>
                 <p>
                   <span className="text-gray-600">RC Number:</span>{" "}
-                  {formDetails.contact.rcNumber}
+                  {formDetails?.contact?.rcNumber}
                 </p>
                 <p>
                   <span className="text-gray-600">Phone Number:</span>{" "}
-                  {formDetails.contact.phone}
+                  {formDetails?.contact?.phone}
                 </p>
                 <p>
                   <span className="text-gray-600">Address:</span>{" "}
-                  {formDetails.contact.address}
+                  {formDetails?.contact?.address}
                 </p>
               </div>
             </div>
@@ -122,20 +122,22 @@ const DaemonFormNCXDetails = () => {
                 Documents
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
-                {formDetails.attachments.map((file) => (
+                {formDetails?.attachments?.map((file) => (
                   <>
                     <div className="flex items-center">
                       <FaFileCode />
-                      <p className="mx-2 text-red-600">{file.file.fileName}</p>
+                      <p className="mx-2 text-red-600">
+                        {file?.file?.fileName}
+                      </p>
                       <FaDownload color="red" />
                     </div>
                     <p className="text-xs">
                       <span>Lable:</span>
-                      {file.file.label}
+                      {file?.file?.label}
                     </p>
                     <p className="text-xs">
                       <span>Date Created:</span>
-                      {file.file.createdAt}
+                      {file?.file?.createdAt}
                     </p>
                   </>
                 ))}
@@ -151,114 +153,150 @@ const DaemonFormNCXDetails = () => {
                   <span className="text-gray-600 text-xs">
                     Processing Bank:
                   </span>{" "}
-                  {formDetails.processingBank.name}
+                  {formDetails?.processingBank?.name}
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">
                     Processing Bank Branch:
                   </span>{" "}
-                  {formDetails.processingBankBranch.name}
+                  {formDetails?.processingBankBranch?.name}
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">
                     Designated Bank:
                   </span>{" "}
-                  {formDetails.designatedBank.name}
+                  {formDetails?.designatedBank?.name}
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">Account Number:</span>{" "}
-                  {formDetails.accountNumber}
+                  {formDetails?.accountNumber}
                 </p>
                 <p>
-                  <span className="text-gray-600">Phone Number:</span>{" "}
-                  {formDetails.contact.phone}
+                  <span className="text-gray-600 text-xs">Exchange Rate:</span>{" "}
+                  {formDetails?.exchangeRate}
                 </p>
                 <p>
-                  <span className="text-gray-600">Address:</span>{" "}
-                  {formDetails.contact.address}
+                  <span className="text-gray-600 text-xs">Payment Mode:</span>{" "}
+                  {formDetails?.paymentMode?.name}
                 </p>
               </div>
             </div>
+            {/* 5 */}
+            <div className="w-[405px] h-[400px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+              <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
+                General Shipment Details
+              </div>
+              <div className="px-4 py-2 grid gap-4 text-sm">
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Loading Terminal:
+                  </span>{" "}
+                  Loading Terminal
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Mode of Transportation:
+                  </span>{" "}
+                  {formDetails?.transportationMode?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Port of Shipment:
+                  </span>{" "}
+                  {formDetails?.portShipment?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Destination Country:
+                  </span>{" "}
+                  {formDetails?.accountNumber}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Port of Discharge:
+                  </span>{" "}
+                  {formDetails?.exchangeRate}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">MEA:</span>{" "}
+                  {formDetails?.monitoringMea?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Temporary Shipping Line:
+                  </span>{" "}
+                  {formDetails?.shipmentTmp}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">By Order Of:</span>{" "}
+                  {formDetails?.byOrderOf}
+                </p>
+              </div>
+            </div>
+            {/* 6 */}
+            <div className="w-[405px] h-[400px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+              <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
+                Consignee Information
+              </div>
+              <div className="px-4 py-2 grid gap-4 text-sm">
+                <p>
+                  <span className="text-gray-600 text-xs">Name:</span>{" "}
+                  {formDetails?.consigneeName}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Email:</span>{" "}
+                  {formDetails?.consigneeEmail}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Phone Number:</span>{" "}
+                  {formDetails?.consigneePhone}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Address Line 1:</span>{" "}
+                  {formDetails?.consigneeAddressLine1}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Address Line 2:</span>{" "}
+                  {formDetails?.consigneeAddressLine1}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">City:</span>{" "}
+                  {formDetails?.consigneeAddressCity}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">State:</span>{" "}
+                  {formDetails?.consigneeAddressState}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Country:</span>{" "}
+                  {formDetails?.consigneeCountry?.name}
+                </p>
+              </div>
+            </div>
+            {/* 7 */}
+            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+              <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
+                PIA
+              </div>
+              <div className="px-4 py-2 grid gap-4 text-sm">
+                <p>
+                  <span className="text-gray-600 text-xs">Name:</span>{" "}
+                  {formDetails?.pia?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Inspection Location:
+                  </span>{" "}
+                  {formDetails?.inspectionLocation?.name}
+                </p>
+              </div>
+            </div>
+            {/* 8 */}
           </div>
         </div>
-
-        {/* <div className="w-[616px] h-[562px] bg-white rounded border shadow-md p-4">
-          <p className="font-semibold text-3xl font-mono">Form Details</p>
-          <form
-            className=" font-mono"
-            // onSubmit={handleSubmit(createUser)}
-          >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="mt-4">
-                <label
-                  htmlFor="details"
-                  className="block text-[#000D19] text-sm mb-2 font-semibold"
-                >
-                  First Name
-                </label>
-                <input
-                  className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                  name="firstName"
-                  value={user.firstName}
-                />
-              </div>
-              <div className="mt-4">
-                <label
-                  htmlFor="details"
-                  className="block text-[#000D19] text-sm mb-2 font-semibold"
-                >
-                  Last Name
-                </label>
-                <input
-                  className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                  name="lastName"
-                  value={user.lastName}
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <label
-                htmlFor="details"
-                className="block text-[#000D19] text-sm mb-2 font-semibold"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                name="email"
-                value={user.email}
-              />
-            </div>
-
-            <div className="mt-4">
-              <label
-                htmlFor="details"
-                className="block text-[#000D19] text-sm mb-2 font-semibold"
-              >
-                Phone number
-              </label>
-              <input
-                className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                name="phoneNumber"
-                value={user.phoneNumber}
-              />
-            </div>
-            <div className="mt-4">
-              <label
-                htmlFor="details"
-                className="block text-[#000D19] text-sm mb-2 font-semibold"
-              >
-                Role
-              </label>
-             
-            </div>
-          </form>
-        </div> */}
       </div>
     </>
   );
 };
 
-export default DaemonFormNCXDetails;
+export default ReviewerFormADetails;

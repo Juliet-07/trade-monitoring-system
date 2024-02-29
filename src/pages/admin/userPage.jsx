@@ -5,11 +5,11 @@ import Navbar from "./navbar";
 
 const UserPage = () => {
   const { id: userID } = useParams();
-  //   console.log(userID, "id");
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
   const [user, setUser] = useState({});
+  const [roles, setRoles] = useState([]);
   const [modal, setModal] = useState(false);
 
   const GetUserById = () => {
@@ -28,19 +28,98 @@ const UserPage = () => {
       .catch((err) => console.log(err));
   };
 
+  const GetRoles = () => {
+    const url = `${baseURL}/RegisterUser/GetRoles`;
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        setRoles(response.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     GetUserById();
+    GetRoles();
   }, []);
+
+  const handleCheckboxChange = (roleName) => {
+    // Logic to update the user's roles
+    // For example, toggle the roleName in user's roles array
+    setUser((prevUser) => ({
+      ...prevUser,
+      role: prevUser.role.includes(roleName)
+        ? prevUser.role.filter((role) => role !== roleName)
+        : [...prevUser.role, roleName],
+    }));
+  };
+
+  const updateUser = () => {
+    const payload = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phoneNumber: user.phoneNumber,
+      email: user.email,
+      userID: user.userID,
+      branch: user.branch,
+      isActive: user.isActive,
+      role: user.role,
+    };
+    const url = `${baseURL}/RegisterUser/UpdateUser`;
+    axios
+      .post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        alert(response.data.message);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const deactivateUser = () => {
+    const payload = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phoneNumber: user.phoneNumber,
+      email: user.email,
+      userID: user.userID,
+      branch: user.branch,
+      isActive: false,
+      role: user.role,
+    };
+    const url = `${baseURL}/RegisterUser/UpdateUser`;
+    axios
+      .post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        alert(response.data.message);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Navbar />
       <div className="p-20 flex items-center justify-center">
-        <div className="w-[616px] h-[562px] bg-white rounded border shadow-md p-4">
+        <div className="w-[616px] h-[630px] bg-white rounded border border-red-400 shadow-md shadow-red-200 p-4">
           <p className="font-semibold text-3xl font-mono">User Details</p>
-          <form
-            className=" font-mono"
-            // onSubmit={handleSubmit(createUser)}
-          >
+          <form className=" font-mono">
             <div className="grid grid-cols-2 gap-4">
               <div className="mt-4">
                 <label
@@ -53,6 +132,7 @@ const UserPage = () => {
                   className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
                   name="firstName"
                   value={user.firstName}
+                  readOnly
                 />
               </div>
               <div className="mt-4">
@@ -66,6 +146,7 @@ const UserPage = () => {
                   className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
                   name="lastName"
                   value={user.lastName}
+                  readOnly
                 />
               </div>
             </div>
@@ -82,6 +163,7 @@ const UserPage = () => {
                 className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 name="email"
                 value={user.email}
+                readOnly
               />
             </div>
 
@@ -96,6 +178,7 @@ const UserPage = () => {
                 className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 name="phoneNumber"
                 value={user.phoneNumber}
+                readOnly
               />
             </div>
             <div className="mt-4">
@@ -103,15 +186,36 @@ const UserPage = () => {
                 htmlFor="details"
                 className="block text-[#000D19] text-sm mb-2 font-semibold"
               >
-                Role
+                Roles
               </label>
-              {/* <Select
-                options={roles}
-                defaultValue={selectedRoles}
-                onChange={handleSelectRolesChange}
-                onInputChange={handleRolesInputChange}
-                isMulti
-              /> */}
+              {roles.map((role) => (
+                <div key={role.id} className="flex items-center mr-4">
+                  <input
+                    type="checkbox"
+                    id={role.name}
+                    name={role.name}
+                    checked={(user.role || []).includes(role.name)}
+                    onChange={() => handleCheckboxChange(role.name)}
+                  />
+                  <label htmlFor={role.name} className="ml-2">
+                    {role.name}
+                  </label>
+                </div>
+              ))}
+            </div>
+            <div className="w-full flex items-center justify-between my-6">
+              <div
+                className="w-[172px] h-[48px] flex items-center justify-center rounded text-white bg-[#9B9CA0] cursor-pointer"
+                onClick={() => deactivateUser()}
+              >
+                Deactivate
+              </div>
+              <div
+                className="w-[172px] h-[48px] flex items-center justify-center rounded text-white bg-[#DB1600] cursor-pointer"
+                onClick={() => updateUser()}
+              >
+                Update
+              </div>
             </div>
           </form>
         </div>

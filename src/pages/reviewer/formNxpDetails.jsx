@@ -4,14 +4,22 @@ import { useParams, Link } from "react-router-dom";
 import Header from "./Header";
 import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
+import Modal from "../../components/Modal";
+import Select from "react-select";
 
-const DaemonFormNXPDetails = () => {
+const ReviewerFormNxpDetails = () => {
   const { id: ID } = useParams();
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
   const [formDetails, setFormDetails] = useState({});
   const [modal, setModal] = useState(false);
+  const [approval, setApproval] = useState(false);
+  const [rejection, setRejection] = useState(false);
+  const [note, setNote] = useState("");
+  const [reasons, setReasons] = useState([]);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [inputValue, setValue] = useState("");
 
   const GetFormDetailsById = () => {
     const url = `${baseURL}/NXP/FormnxpDetails?formID=${ID}`;
@@ -29,29 +37,96 @@ const DaemonFormNXPDetails = () => {
       .catch((err) => console.log(err));
   };
 
+  const handleReasonsInputChange = (value) => {
+    setValue(value);
+  };
+  const handleSelectReasonsChange = (value) => {
+    setRejectionReason(value);
+    console.log(value, "selected reason");
+  };
+
+  const GetReasons = () => {
+    let details;
+    let reasons;
+    const url = `${baseURL}/RejectionReasons/NXPRejectionReasonList`;
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        details = response.data.responseResult.content;
+        reasons = details.map((reason) => {
+          return {
+            value: reason?.id,
+            label: reason?.name,
+          };
+        });
+        setReasons(reasons);
+        // console.log(roles, "checking");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const sendApproval = () => {
+    const url = `${baseURL}/NXP/FormnxpADBReviewer?applicationNumber=${formDetails?.applicationNumber}`;
+    const payload = {
+      approved: approval,
+      note: note,
+      daemonReviewerName: "string",
+      daemonSupervisorName: "string",
+      rejectionReasonCode: rejection ? rejectionReason.label : "string",
+    };
+
+    console.log(payload);
+    axios
+      .post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response, "response from approval");
+        alert(response.data.message);
+      });
+  };
+
   useEffect(() => {
     GetFormDetailsById();
+    GetReasons();
   }, []);
-
   return (
     <>
       <Header />
       <div className="p-10">
         <Link
-          to="/daemon/formNxp"
+          to="/reviewer/formNxp"
           className="flex items-center p-2 w-[85px] h-10 border border-gray-100 rounded-lg"
         >
           <TbArrowBackUp color="#475467" />
           <span className="text-gray-600 mx-2">Back</span>
         </Link>
-        <div className="my-10 font-mono">
-          <p className="font-semibold">
-            Application:
-            <span className="text-gray-600">
-              {formDetails?.applicationNumber}
-            </span>
-          </p>
-          <div className="my-4 grid grid-cols-3 gap-y-4">
+        <div className="my-4 font-mono">
+          <div className="w-full flex items-center justify-between h-10 py-10">
+            <p className="font-semibold">
+              Application:
+              <span className="text-gray-600">
+                {formDetails?.applicationNumber}
+              </span>
+            </p>
+            <div
+              className="w-[150px] h-10 flex items-center justify-center rounded text-white bg-[#DB1600] cursor-pointer my-4"
+              onClick={() => setModal(true)}
+            >
+              Action
+            </div>
+          </div>
+
+          <div className="w-full grid md:grid-cols-3 2xl:grid-cols-4 gap-y-4">
             {/* 1 */}
             <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
@@ -224,7 +299,7 @@ const DaemonFormNXPDetails = () => {
                   <span className="text-gray-600 text-xs">
                     Temporary Shipping Line:
                   </span>{" "}
-                  {formDetails?.shipmentTmp}
+                  {formDetails?.tempShippingLine?.name}
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">By Order Of:</span>{" "}
@@ -293,84 +368,95 @@ const DaemonFormNXPDetails = () => {
             {/* 8 */}
           </div>
         </div>
+        <Modal isVisible={modal} onClose={() => setModal(false)}>
+          <div className="font-mono w-[500px]">
+            <form className="w-full flex flex-col items-center justify-center">
+              <div className="font-semibold">Approve Or Reject Request</div>
+              <div className="w-full p-4">
+                <div className="w-full flex items-center mb-4">
+                  <input
+                    id="approval-radio"
+                    type="radio"
+                    checked={approval}
+                    onChange={() => {
+                      setApproval(!approval);
+                      if (rejection) {
+                        setRejection(false);
+                      }
+                    }}
+                    className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="approval-radio"
+                    className="ml-2 font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Recommended for Approval
+                  </label>
+                </div>
+                <div className="w-full flex flex-col mb-4">
+                  <div className="flex items-center">
+                    <input
+                      id="rejection-checkbox"
+                      type="radio"
+                      checked={rejection}
+                      onChange={() => {
+                        setRejection(!rejection);
+                        if (approval) {
+                          setApproval(false);
+                        }
+                      }}
+                      className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
+                    />
+                    <label
+                      htmlFor="rejection-checkbox"
+                      className="ml-2 font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Recommended for Rejection
+                    </label>
+                  </div>
 
-        {/* <div className="w-[616px] h-[562px] bg-white rounded border shadow-md p-4">
-          <p className="font-semibold text-3xl font-mono">Form Details</p>
-          <form
-            className=" font-mono"
-            // onSubmit={handleSubmit(createUser)}
-          >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="mt-4">
-                <label
-                  htmlFor="details"
-                  className="block text-[#000D19] text-sm mb-2 font-semibold"
-                >
-                  First Name
-                </label>
-                <input
-                  className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                  name="firstName"
-                  value={user.firstName}
-                />
+                  {rejection && (
+                    <Select
+                      options={reasons}
+                      defaultValue={rejectionReason}
+                      onChange={handleSelectReasonsChange}
+                      onInputChange={handleReasonsInputChange}
+                      isSearchable
+                    />
+                    // <select
+                    //   className="w-[350px] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border mt-2"
+                    //   value={rejectionReason}
+                    //   onChange={(e) => setRejectionReason(e.target.value)}
+                    // >
+                    //   <option value="">Select rejection reason</option>
+
+                    // </select>
+                  )}
+                </div>
+                <div className="w-full">
+                  <textarea
+                    id="message"
+                    rows="4"
+                    className=" p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border"
+                    placeholder="Write notes for approval or rejection"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  ></textarea>
+                </div>
               </div>
-              <div className="mt-4">
-                <label
-                  htmlFor="details"
-                  className="block text-[#000D19] text-sm mb-2 font-semibold"
-                >
-                  Last Name
-                </label>
-                <input
-                  className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                  name="lastName"
-                  value={user.lastName}
-                />
+
+              <div
+                className="bg-yellow-600 w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer font-semibold m-4"
+                onClick={() => sendApproval()}
+              >
+                Submit
               </div>
-            </div>
-
-            <div className="mt-4">
-              <label
-                htmlFor="details"
-                className="block text-[#000D19] text-sm mb-2 font-semibold"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                name="email"
-                value={user.email}
-              />
-            </div>
-
-            <div className="mt-4">
-              <label
-                htmlFor="details"
-                className="block text-[#000D19] text-sm mb-2 font-semibold"
-              >
-                Phone number
-              </label>
-              <input
-                className="block w-full h-[50px] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-red-400 focus:ring-red-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                name="phoneNumber"
-                value={user.phoneNumber}
-              />
-            </div>
-            <div className="mt-4">
-              <label
-                htmlFor="details"
-                className="block text-[#000D19] text-sm mb-2 font-semibold"
-              >
-                Role
-              </label>
-             
-            </div>
-          </form>
-        </div> */}
+            </form>
+          </div>
+        </Modal>
       </div>
     </>
   );
 };
 
-export default DaemonFormNXPDetails;
+export default ReviewerFormNxpDetails;
