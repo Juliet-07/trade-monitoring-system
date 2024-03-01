@@ -5,8 +5,9 @@ import Header from "../../components/Header";
 import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
 import Modal from "../../components/Modal";
+import Select from "react-select";
 
-const SupervisorFormADetails = () => {
+const DBS_ReviewerFormADetails = () => {
   const { id: ID } = useParams();
   //   console.log(userID, "id");
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
@@ -33,6 +34,32 @@ const SupervisorFormADetails = () => {
       .then((response) => {
         console.log(response.data.responseResult);
         setFormDetails(response.data.responseResult);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const GetReasons = () => {
+    let details;
+    let reasons;
+    const url = `${baseURL}/RejectionReasons/NXPRejectionReasonList`;
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        details = response.data.responseResult.content;
+        reasons = details.map((reason) => {
+          return {
+            value: reason?.id,
+            label: reason?.name,
+          };
+        });
+        setReasons(reasons);
+        // console.log(roles, "checking");
       })
       .catch((err) => console.log(err));
   };
@@ -74,6 +101,7 @@ const SupervisorFormADetails = () => {
   };
   useEffect(() => {
     GetFormDetailsById();
+    GetReasons();
   }, []);
 
   return (
@@ -81,7 +109,7 @@ const SupervisorFormADetails = () => {
       <Header />
       <div className="p-10">
         <Link
-          to="/supervisor/formA"
+          to="/dbs_reviewer/formA"
           className="flex items-center p-2 w-[85px] h-10 border border-gray-100 rounded-lg"
         >
           <TbArrowBackUp color="#475467" />
@@ -330,64 +358,55 @@ const SupervisorFormADetails = () => {
             </div>
           </div>
           <div className="py-3 font-semibold">Workflow Notes</div>
-          {formDetails?.workflowNotes?.map((note) => (
-            <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
-              <p>
-                <span className="text-gray-600 text-xs">Actor:</span>{" "}
-                {note?.applicationStatusCode}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Action:</span>{" "}
-                {note?.name}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Note:</span>{" "}
-                {note?.noteDescription}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Date Created:</span>{" "}
-                {note?.createdAt}
-              </p>
-            </div>
-          ))}
+          <div className="w-full grid grid-cols-3">
+            {formDetails?.workflowNotes?.map((note) => (
+              <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
+                <p>
+                  <span className="text-gray-600 text-xs">Actor:</span>{" "}
+                  {note?.applicationStatusCode}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Action:</span>{" "}
+                  {note?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Note:</span>{" "}
+                  {note?.noteDescription}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Date Created:</span>{" "}
+                  {note?.createdAt}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
         <Modal isVisible={modal} onClose={() => setModal(false)}>
           <div className="font-mono w-[500px]">
-            <form className="w-full flex flex-col items-center justify-center">
-              <div className="w-full">
-                <p className="font-semibold my-2 text-green-500">
-                  Reviewer Action
-                </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <p className="font-semibold">
-                    Actor:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                  <p className="font-semibold">
-                    Action:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                  <p className="font-semibold">
-                    Note:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                  <p className="font-semibold">
-                    Date:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                </div>
+            <form className="w-full flex flex-col px-2">
+              <div className="w-[400px]">
+                <p className="font-semibold">Beneficiaries</p>
+                {formDetails?.beneficiaries?.map((user) => (
+                  <div className="grid gap-3 bg-white border shadow-lg px-3 my-4">
+                    <p>
+                      <span className="text-gray-600 text-xs">Name:</span>{" "}
+                      {user?.name}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">BVN:</span>{" "}
+                      {user?.email}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">
+                        Amount Requested:
+                      </span>{" "}
+                      {user?.amountRequested}
+                    </p>
+                  </div>
+                ))}
               </div>
               <div className="w-full">
-                <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
-                <div className="w-full flex items-center mb-4">
+                <div className="w-full flex items-center mb-2">
                   <input
                     id="approval-radio"
                     type="radio"
@@ -404,7 +423,7 @@ const SupervisorFormADetails = () => {
                     htmlFor="approval-radio"
                     className="ml-2 font-medium text-gray-900 dark:text-gray-300"
                   >
-                    Accept Reviewer Action
+                    Recommended for Approval
                   </label>
                 </div>
                 <div className="w-full flex flex-col mb-4">
@@ -425,7 +444,7 @@ const SupervisorFormADetails = () => {
                       htmlFor="rejection-checkbox"
                       className="ml-2 font-medium text-gray-900 dark:text-gray-300"
                     >
-                      Request Reviewer Modification
+                      Recommended for Rejection
                     </label>
                   </div>
 
@@ -473,4 +492,4 @@ const SupervisorFormADetails = () => {
   );
 };
 
-export default SupervisorFormADetails;
+export default DBS_ReviewerFormADetails;

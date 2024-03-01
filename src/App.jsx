@@ -11,6 +11,10 @@ import DaemonFormNCX from "./pages/daemon/formNCX";
 import DaemonFormNCXDetails from "./pages/daemon/formNCXDetails";
 import DaemonFormNXPDetails from "./pages/daemon/formNXPDetails";
 import DaemonFormNXP from "./pages/daemon/landingPage";
+import DBS_ReviewerFormA from "./pages/disbursementReviewer/formA";
+import DBS_ReviewerFormADetails from "./pages/disbursementReviewer/formADetails";
+import DBS_SupervisorFormA from "./pages/disbursementSupervisor/formA";
+import DBS_SupervisorFormADetails from "./pages/disbursementSupervisor/formADetails";
 import Login from "./pages/login";
 import ReviewerFormA from "./pages/reviewer/formA";
 import ReviewerFormADetails from "./pages/reviewer/formADetails";
@@ -19,8 +23,10 @@ import ReviewerFormNCXDetails from "./pages/reviewer/formNcxDetails";
 import ReviewerFormNxpDetails from "./pages/reviewer/formNxpDetails";
 import ReviewerFormNXP from "./pages/reviewer/landingPage";
 import SupervisorFormA from "./pages/supervisor/formA";
-import FormADetails from "./pages/supervisor/formADetails";
+import SupervisorFormADetails from "./pages/supervisor/formADetails";
 import SupervisorFormNCX from "./pages/supervisor/formNCX";
+import SupervisorFormNCXDetails from "./pages/supervisor/formNcxDetails";
+import SupervisorFormNxpDetails from "./pages/supervisor/formNxpDetails";
 import SupervisorFormNXP from "./pages/supervisor/landingPage";
 
 function App() {
@@ -60,9 +66,30 @@ function App() {
         element={<ReviewerFormNCXDetails />}
       />
       <Route path="/supervisor/formNxp" element={<SupervisorFormNXP />} />
+      <Route
+        path="/supervisor/formNxpDetails/:id"
+        element={<SupervisorFormNxpDetails />}
+      />
       <Route path="/supervisor/formA" element={<SupervisorFormA />} />
-      <Route path="/supervisor/formADetails/:id" element={<FormADetails />} />
+      <Route
+        path="/supervisor/formADetails/:id"
+        element={<SupervisorFormADetails />}
+      />
       <Route path="/supervisor/formNcx" element={<SupervisorFormNCX />} />
+      <Route
+        path="/supervisor/formNcxDetails/:id"
+        element={<SupervisorFormNCXDetails />}
+      />
+      <Route path="/dbs_supervisor/formA" element={<DBS_SupervisorFormA />} />
+      <Route
+        path="/dbs_supervisor/formADetails/:id"
+        element={<DBS_SupervisorFormADetails />}
+      />
+      <Route path="/dbs_reviewer/formA" element={<DBS_ReviewerFormA />} />
+      <Route
+        path="/dbs_reviewer/formADetails/:id"
+        element={<DBS_ReviewerFormADetails />}
+      />
     </Routes>
   );
 }

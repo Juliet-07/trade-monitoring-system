@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import BGIMAGE from "../assets/bg-login.jpeg";
 import Logo from "../assets/icon.svg";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const navigate = useNavigate();
   const { handleSubmit } = useForm();
+  const [loading, setLoading] = useState(false);
   const initialValues = {
     email: "",
     adpassword: "",
@@ -23,6 +25,7 @@ const Login = () => {
 
   // function to validate user through ActiveDirectory
   const handleLoginValidation = () => {
+    setLoading(true);
     const url = `${baseURL}/Auth/GetAccessToken`;
     try {
       fetch(url, {
@@ -36,6 +39,7 @@ const Login = () => {
         .then((user) => {
           console.log(user, "confirm here");
           window.alert(user.message);
+          setLoading(false);
           let trmsUser = JSON.stringify(user.data);
           localStorage.setItem("trmsUser", trmsUser);
           console.log(user.data.role);
@@ -51,6 +55,18 @@ const Login = () => {
           if (user.data.role && user.data.role.includes("FI_SUPERVISOR")) {
             navigate("/supervisor/formNxp");
           }
+          if (
+            user.data.role &&
+            user.data.role.includes("FI_DISBURSEMENT_REVIEWER")
+          ) {
+            navigate("/dbs_reviewer/formA");
+          }
+          if (
+            user.data.role &&
+            user.data.role.includes("FI_DISBURSEMENT_SUPERVISOR")
+          ) {
+            navigate("/dbs_supervisor/formA");
+          }
         });
     } catch (error) {
       console.log(error);
@@ -63,6 +79,7 @@ const Login = () => {
   //   };
   return (
     <div className="w-full h-full">
+      {loading && <Loader />}
       <div
         className="w-full h-screen relative bg-cover"
         style={{

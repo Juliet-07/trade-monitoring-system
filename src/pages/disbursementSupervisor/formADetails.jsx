@@ -6,7 +6,7 @@ import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
 import Modal from "../../components/Modal";
 
-const SupervisorFormADetails = () => {
+const DBS_SupervisorFormADetails = () => {
   const { id: ID } = useParams();
   //   console.log(userID, "id");
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
@@ -81,7 +81,7 @@ const SupervisorFormADetails = () => {
       <Header />
       <div className="p-10">
         <Link
-          to="/supervisor/formA"
+          to="/dbs_supervisor/formA"
           className="flex items-center p-2 w-[85px] h-10 border border-gray-100 rounded-lg"
         >
           <TbArrowBackUp color="#475467" />
@@ -330,26 +330,28 @@ const SupervisorFormADetails = () => {
             </div>
           </div>
           <div className="py-3 font-semibold">Workflow Notes</div>
-          {formDetails?.workflowNotes?.map((note) => (
-            <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
-              <p>
-                <span className="text-gray-600 text-xs">Actor:</span>{" "}
-                {note?.applicationStatusCode}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Action:</span>{" "}
-                {note?.name}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Note:</span>{" "}
-                {note?.noteDescription}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Date Created:</span>{" "}
-                {note?.createdAt}
-              </p>
-            </div>
-          ))}
+          <div className="w-full grid grid-cols-3">
+            {formDetails?.workflowNotes?.map((note) => (
+              <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
+                <p>
+                  <span className="text-gray-600 text-xs">Actor:</span>{" "}
+                  {note?.applicationStatusCode}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Action:</span>{" "}
+                  {note?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Note:</span>{" "}
+                  {note?.noteDescription}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Date Created:</span>{" "}
+                  {note?.createdAt}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
         <Modal isVisible={modal} onClose={() => setModal(false)}>
           <div className="font-mono w-[500px]">
@@ -473,4 +475,4 @@ const SupervisorFormADetails = () => {
   );
 };
 
-export default SupervisorFormADetails;
+export default DBS_SupervisorFormADetails;

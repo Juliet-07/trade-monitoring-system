@@ -20,6 +20,7 @@ const AdminPage = () => {
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [inputValue, setValue] = useState("");
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const infoCards = [
     {
@@ -103,6 +104,7 @@ const AdminPage = () => {
   };
 
   const createUser = () => {
+    setLoading(true);
     const url = `${baseURL}/RegisterUser/register`;
     const rolesArray = selectedRoles.map((role) => role.value);
     const payload = {
@@ -120,6 +122,14 @@ const AdminPage = () => {
       .then((response) => {
         console.log(response, "response from creating user");
         alert(response.data.message);
+        setLoading(false);
+        if (response.status === 200) {
+          // Close the modal upon successful registration
+          setModal(false);
+          // Clear the form fields
+          setAddNewUser(initialValues);
+          setSelectedRoles([]);
+        }
       });
   };
 
@@ -132,7 +142,7 @@ const AdminPage = () => {
     <>
       <Navbar />
       <div className="py-4 px-20">
-        <div className="my-10 grid grid-cols-3">
+        {/* <div className="my-10 grid grid-cols-3">
           {infoCards.map((card) => (
             <div className="bg-white rounded-xl w-[320.4px] h-[149.6px] border shadow-lg flex items-center px-6">
               <div className="w-[75px] h-[75px] border-[3px] border-[#DB1600] rounded-xl mr-4"></div>
@@ -144,7 +154,7 @@ const AdminPage = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
         {/* Table */}
         <div className="p-4 flex flex-col items-center justify-center bg-white rounded shadow-lg border">
           <div className="w-full flex items-center justify-between mb-4 px-4">

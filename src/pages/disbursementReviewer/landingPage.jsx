@@ -3,29 +3,28 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import { FaEye } from "react-icons/fa";
-import { FaDownload } from "react-icons/fa6";
 
-const SupervisorFormNCX = () => {
+const ReviewerFormNXP = () => {
   const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7; // Set the number of items per page
-  const [pendingNCX, setPendingNCX] = useState([]);
-  const [processedncx, setProcessedncx] = useState([]);
+  const [pendingNXP, setPendingNXP] = useState([]);
+  const [processedNXP, setProcessedNXP] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState({});
 
   // Logic to paginate the data
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = pendingNCX.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = pendingNXP.slice(indexOfFirstItem, indexOfLastItem);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const GetPendingFormNCX = () => {
-    const url = `${baseURL}/NCX/GetPendingFormNCX`;
+  const GetPendingNXP = () => {
+    const url = `${baseURL}/NXP/Pendingnxps`;
     let data;
     axios
       .get(url, {
@@ -35,15 +34,15 @@ const SupervisorFormNCX = () => {
         },
       })
       .then((response) => {
-        console.log(response.data, "Pending NCX");
+        console.log(response.data, "Pending NXP");
         data = response.data.responseResult.content;
-        setPendingNCX(data);
+        setPendingNXP(data);
       })
       .catch((err) => console.log(err));
   };
 
-  const GetProcessedNCX = () => {
-    const url = `${baseURL}/NCX/FormNCXLists`;
+  const GetProcessedNXP = () => {
+    const url = `${baseURL}/NXP/Processednxps`;
     let data;
     axios
       .get(url, {
@@ -53,20 +52,21 @@ const SupervisorFormNCX = () => {
         },
       })
       .then((response) => {
-        console.log(response.data, "Processed NCX");
+        console.log(response.data, "Processed NXP");
         data = response.data.responseResult.content;
-        setProcessedncx(data);
+        setProcessedNXP(data);
       })
       .catch((err) => console.log(err));
   };
 
   useEffect(() => {
-    GetPendingFormNCX();
-    GetProcessedNCX();
+    GetPendingNXP();
+    GetProcessedNXP();
   }, []);
   return (
     <Layout>
       <div className="text-3xl font-semibold text-red-800 font-mono">
+        {/* <h3 className="mb-5 text-md">Form NXP</h3> */}
         <div className="shadow py-2 px-2">
           <h4 className="text-sm mb-5">Pending Applications</h4>
           <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
@@ -75,7 +75,8 @@ const SupervisorFormNCX = () => {
                 <td>Application No.</td>
                 <td>Form Number</td>
                 <td>Applicant Name</td>
-                <td>Branch</td>
+                <td>FoB Value($)</td>
+                <td>NESS Levy (N)</td>
                 <td>Last Modified</td>
                 <td className="text-yellow-600">Stage</td>
                 <td>Date Created</td>
@@ -83,29 +84,30 @@ const SupervisorFormNCX = () => {
               </tr>
             </thead>
             <tbody>
-              {pendingNCX.map((ncx, index) => (
+              {pendingNXP.map((nxp, index) => (
                 <tr
                   key={index}
                   className={`h-10 text-center ${
-                    parseInt(ncx.applicationNumber) % 2 === 1
+                    parseInt(nxp.applicationNumber) % 2 === 1
                       ? "bg-gray-200"
                       : ""
                   }`}
                 >
-                  <td>{ncx.applicationNumber}</td>
-                  <td>{ncx.formNumber}</td>
-                  <td>{ncx.applicantName}</td>
-                  <td>{ncx.processingBankBranchName}</td>
-                  <td>{ncx.updatedAt}</td>
-                  <td className="text-yellow-600">{ncx.statusCode}</td>
-                  <td>{ncx.createdAt}</td>
+                  <td>{nxp.applicationNumber}</td>
+                  <td>{nxp.formNumber}</td>
+                  <td>{nxp.applicantName}</td>
+                  <td>$ {nxp.initialShipmentTotalDollarFoB}</td>
+                  <td>N {nxp.initialShipmentNessLevyPayable}</td>
+                  <td>{nxp.updatedAt}</td>
+                  <td className="text-yellow-600">{nxp.statusCode}</td>
+                  <td>{nxp.createdAt}</td>
                   <td className="flex items-center p-4">
                     <div className="group relative">
                       <span className=" hover:text-black cursor-pointer">
                         <FaEye
                           onClick={() => {
-                            setSelectedRowData(ncx.id);
-                            navigate(`/supervisor/formNcxDetails/${ncx.id}`);
+                            setSelectedRowData(nxp.id);
+                            navigate(`/Reviewer-formNxpDetails/${nxp.id}`);
                           }}
                         />
                       </span>
@@ -130,7 +132,7 @@ const SupervisorFormNCX = () => {
       </div>
       {/* Pagination */}
       <div className="flex justify-center mt-4">
-        {[...Array(Math.ceil(pendingNCX.length / itemsPerPage)).keys()].map(
+        {[...Array(Math.ceil(pendingNXP.length / itemsPerPage)).keys()].map(
           (number) => (
             <button
               key={number + 1}
@@ -150,7 +152,8 @@ const SupervisorFormNCX = () => {
               <td>Application No.</td>
               <td>Form Number</td>
               <td>Applicant Name</td>
-              <td>Branch</td>
+              <td>FoB Value($)</td>
+              <td>NESS Levy(N)</td>
               <td>Last Modified</td>
               <td className="text-yellow-600">Stage</td>
               <td>Date Created</td>
@@ -158,27 +161,28 @@ const SupervisorFormNCX = () => {
             </tr>
           </thead>
           <tbody>
-            {processedncx.map((ncx, index) => (
+            {processedNXP.map((nxp, index) => (
               <tr
                 key={index}
                 className={`h-10 text-center ${
-                  parseInt(ncx.applicationNumber) % 2 === 1 ? "bg-gray-200" : ""
+                  parseInt(nxp.applicationNumber) % 2 === 1 ? "bg-gray-200" : ""
                 }`}
               >
-                <td>{ncx.applicationNumber}</td>
-                <td>{ncx.formNumber}</td>
-                <td>{ncx.applicantName}</td>
-                <td>{ncx.processingBankBranchName}</td>
-                <td>{ncx.updatedAt}</td>
-                <td className="text-yellow-600">{ncx.statusCode}</td>
-                <td>{ncx.createdAt}</td>
+                <td>{nxp.applicationNumber}</td>
+                <td>{nxp.formNumber}</td>
+                <td>{nxp.applicantName}</td>
+                <td>$ {nxp.initialShipmentTotalDollarFoB}</td>
+                <td>N {nxp.initialShipmentNessLevyPayable}</td>
+                <td>{nxp.updatedAt}</td>
+                <td className="text-yellow-600">{nxp.statusCode}</td>
+                <td>{nxp.createdAt}</td>
                 <td className="flex items-center p-4">
                   <div className="group relative">
                     <span className=" hover:text-black cursor-pointer">
                       <FaEye
                         onClick={() => {
-                          setSelectedRowData(ncx.id);
-                          navigate(`/supervisor/formNcxDetails/${ncx.id}`);
+                          setSelectedRowData(nxp.id);
+                          navigate(`/Reviewer-formNxpDetails/${nxp.id}`);
                         }}
                       />
                     </span>
@@ -205,4 +209,4 @@ const SupervisorFormNCX = () => {
   );
 };
 
-export default SupervisorFormNCX;
+export default ReviewerFormNXP;

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Navbar from "./navbar";
+import { TbArrowBackUp } from "react-icons/tb";
 
 const UserPage = () => {
   const { id: userID } = useParams();
@@ -116,7 +117,14 @@ const UserPage = () => {
   return (
     <>
       <Navbar />
-      <div className="p-20 flex items-center justify-center">
+      <Link
+        to="/admin"
+        className="flex items-center p-2 w-[85px] h-10 border border-gray-100 rounded-lg m-6"
+      >
+        <TbArrowBackUp color="#475467" />
+        <span className="text-gray-600 mx-2">Back</span>
+      </Link>
+      <div className="p-10 flex items-center justify-center">
         <div className="w-[616px] h-[630px] bg-white rounded border border-red-400 shadow-md shadow-red-200 p-4">
           <p className="font-semibold text-3xl font-mono">User Details</p>
           <form className=" font-mono">

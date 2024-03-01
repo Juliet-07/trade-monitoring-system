@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { TfiAgenda } from "react-icons/tfi";
 import { LuNetwork } from "react-icons/lu";
 import { SiFormstack } from "react-icons/si";
-import Header from "./Header";
+import Header from "../../components/Header";
 
 const Layout = ({ children }) => {
   const Menus = [

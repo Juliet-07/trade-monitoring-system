@@ -4,11 +4,11 @@ import { useParams, Link } from "react-router-dom";
 import Header from "../../components/Header";
 import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
+import Select from "react-select";
 import Modal from "../../components/Modal";
 
-const SupervisorFormADetails = () => {
+const SupervisorFormNCXDetails = () => {
   const { id: ID } = useParams();
-  //   console.log(userID, "id");
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
@@ -22,7 +22,7 @@ const SupervisorFormADetails = () => {
   const [inputValue, setValue] = useState("");
 
   const GetFormDetailsById = () => {
-    const url = `${baseURL}/v1/FormA/FormAPendingDetails?formID=${ID}`;
+    const url = `${baseURL}/NCX/NCXFormDeatails?NcxForm_ID=${ID}`;
     axios
       .get(url, {
         headers: {
@@ -45,8 +45,34 @@ const SupervisorFormADetails = () => {
     console.log(value, "selected reason");
   };
 
+  const GetReasons = () => {
+    let details;
+    let reasons;
+    const url = `${baseURL}/RejectionReasons/NXPRejectionReasonList`;
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        details = response.data.responseResult.content;
+        reasons = details.map((reason) => {
+          return {
+            value: reason?.id,
+            label: reason?.name,
+          };
+        });
+        setReasons(reasons);
+        // console.log(roles, "checking");
+      })
+      .catch((err) => console.log(err));
+  };
+
   const sendApproval = () => {
-    const url = `${baseURL}/v1/FormA/FormAADBReviewer?applicationNumber=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/NCX/PostNCXAdbReviewer?ncx_applicationNo=${formDetails?.applicationNumber}`;
     const payload = {
       approved: approval,
       note: note,
@@ -72,22 +98,23 @@ const SupervisorFormADetails = () => {
         }
       });
   };
+
   useEffect(() => {
     GetFormDetailsById();
+    GetReasons();
   }, []);
-
   return (
     <>
       <Header />
       <div className="p-10">
         <Link
-          to="/supervisor/formA"
+          to="/supervisor/formNcx"
           className="flex items-center p-2 w-[85px] h-10 border border-gray-100 rounded-lg"
         >
           <TbArrowBackUp color="#475467" />
           <span className="text-gray-600 mx-2">Back</span>
         </Link>
-        <div className="my-6 font-mono">
+        <div className="my-4 font-mono">
           <div className="w-full flex items-center justify-between h-10 py-10">
             <p className="font-semibold">
               Application:
@@ -139,7 +166,7 @@ const SupervisorFormADetails = () => {
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
                   <span className="text-gray-600">Name:</span>{" "}
-                  {formDetails?.applicantName}
+                  {formDetails?.contact?.firstName}
                 </p>
                 <p>
                   <span className="text-gray-600">Email:</span>{" "}
@@ -147,7 +174,7 @@ const SupervisorFormADetails = () => {
                 </p>
                 <p>
                   <span className="text-gray-600">BVN:</span>{" "}
-                  {formDetails?.applicantTINBVN}
+                  {formDetails?.contact?.bvn}
                 </p>
                 <p>
                   <span className="text-gray-600">Phone Number:</span>{" "}
@@ -160,7 +187,7 @@ const SupervisorFormADetails = () => {
               </div>
             </div>
             {/* 3 */}
-            {/* <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[400px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
                 Documents
               </div>
@@ -185,9 +212,9 @@ const SupervisorFormADetails = () => {
                   </>
                 ))}
               </div>
-            </div> */}
+            </div>
             {/* 4 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[290px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
                 Bank Details
               </div>
@@ -210,124 +237,170 @@ const SupervisorFormADetails = () => {
                   </span>{" "}
                   {formDetails?.accountNumber}
                 </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Exchange Rate:</span>{" "}
+                  {formDetails?.exchangeRate}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Estimated Value of Goods (Naira):
+                  </span>{" "}
+                  N {formDetails?.estimatedValueOfGoodsNaira}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Estimated Value of Goods (Dollars):
+                  </span>{" "}
+                  $ {formDetails?.estimatedValueOfGoodsDollar}
+                </p>
               </div>
             </div>
             {/* 5 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[420px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Trade Services
+                Shipment Details
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
                   <span className="text-gray-600 text-xs">
-                    Is Valid For FOREX:
+                    Purpose of Shipment:
                   </span>{" "}
-                  {formDetails?.validForForex}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Trade Category:</span>{" "}
-                  {formDetails?.transactionPurpose?.tradeCategory?.name}
+                  {formDetails?.shipmentPurpose?.name}
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">
-                    Transaction Purpose:
+                    Port of Shipment:
                   </span>{" "}
-                  {formDetails?.transactionPurpose?.name}
+                  {formDetails?.portShipment?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Destination Country:
+                  </span>{" "}
+                  {formDetails?.portDischarge?.country?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Port of Discharge:
+                  </span>{" "}
+                  {formDetails?.portDischarge?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Expected Shipment Date:
+                  </span>{" "}
+                  {formDetails?.expectedShipmentDate}
+                </p>
+
+                <p>
+                  <span className="text-gray-600 text-xs">By Order Of:</span>{" "}
+                  {formDetails?.byOrderOf}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Shipper Name:</span>{" "}
+                  {formDetails?.shipperName}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Shipper Phone:</span>{" "}
+                  {formDetails?.shipperPhone}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Shipper Address:
+                  </span>{" "}
+                  {formDetails?.shipperAddress}
                 </p>
               </div>
             </div>
             {/* 6 */}
-            <div className="w-[405px] h-[320px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[400px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Beneficiary Information
+                Consignee Information
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
-                {formDetails?.beneficiaries?.map((user) => (
-                  <>
-                    <p>
-                      <span className="text-gray-600 text-xs">Name:</span>{" "}
-                      {user?.name}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">Email:</span>{" "}
-                      {user?.email}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Passport Number:
-                      </span>{" "}
-                      {user?.passportNumber}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Phone Number:
-                      </span>{" "}
-                      {user?.phone}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Address Line 1:
-                      </span>{" "}
-                      {user?.addressLine1}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">City:</span>{" "}
-                      {user?.city}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">State:</span>{" "}
-                      {user?.state}
-                    </p>
-                  </>
-                ))}
+                <p>
+                  <span className="text-gray-600 text-xs">Name:</span>{" "}
+                  {formDetails?.consigneeName}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Email:</span>{" "}
+                  {formDetails?.consigneeEmail}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Phone Number:</span>{" "}
+                  {formDetails?.consigneePhone}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Address Line 1:</span>{" "}
+                  {formDetails?.consigneeAddressLine1}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Address Line 2:</span>{" "}
+                  {formDetails?.consigneeAddressLine1}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">City:</span>{" "}
+                  {formDetails?.consigneeAddressCity}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">State:</span>{" "}
+                  {formDetails?.consigneeAddressState}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Country:</span>{" "}
+                  {formDetails?.consigneeCountry?.name}
+                </p>
               </div>
             </div>
             {/* 7 */}
             <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Requested Information
+                Shipping/Bill of Lading
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
-                {formDetails?.beneficiaries?.map((user) => (
-                  <p>
-                    <span className="text-gray-600 text-xs">
-                      Amount Requested:
-                    </span>{" "}
-                    {user?.amountRequested}
-                  </p>
-                ))}
+                <p>
+                  <span className="text-gray-600 text-xs">Shipping Line:</span>{" "}
+                  {formDetails?.shippingLine?.name}
+                </p>
               </div>
             </div>
             {/* 8 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
-              <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Travel Information
-              </div>
-              <div className="px-4 py-2 grid gap-4 text-sm">
-                {formDetails?.beneficiaries?.map((user) => (
-                  <>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Destination Country:
-                      </span>{" "}
-                      {user?.country?.name}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Air Ticket No.:
-                      </span>{" "}
-                      {user?.airTicketNumber}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Airline Route:
-                      </span>{" "}
-                      {user?.route}
-                    </p>
-                  </>
+          </div>
+          <div className="w-full shadow p-2 font-semibold font-mono border">
+            <h4 className="text-sm mb-5 text-green-500">Items</h4>
+            <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
+              <thead className="h-10 border-b">
+                <tr>
+                  <td>HS Code</td>
+                  <td>Packaging Mode</td>
+                  {/* <td>Applicant Name</td> */}
+                  <td>Unit of Measurement</td>
+                  <td>Quantity</td>
+                  <td>Net Weight</td>
+                  <td>Gross Weight</td>
+                </tr>
+              </thead>
+              <tbody>
+                {formDetails?.items?.map((item, index) => (
+                  <tr key={index} className="h-10 bg-gray-50">
+                    <td>{item?.hsCode?.name}</td>
+                    <td>{item?.packagingMode?.name}</td>
+                    <td>{item?.unitOfMeasurement?.name}</td>
+                    <td>{item?.quantity}</td>
+                    <td>{item?.netWeight}</td>
+                    <td>{item?.grossWeight}</td>
+                  </tr>
                 ))}
-              </div>
-            </div>
+                <tr className="border-t border-b">
+                  <td></td>
+                  <td></td>
+                  <td className="p-4">Total:</td>
+                  <td>{formDetails?.totalQuantity}</td>
+                  <td>{formDetails?.totalNetWeight}</td>
+                  <td>{formDetails?.totalGrossWeight}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div className="py-3 font-semibold">Workflow Notes</div>
           {formDetails?.workflowNotes?.map((note) => (
@@ -428,24 +501,6 @@ const SupervisorFormADetails = () => {
                       Request Reviewer Modification
                     </label>
                   </div>
-
-                  {rejection && (
-                    <Select
-                      options={reasons}
-                      defaultValue={rejectionReason}
-                      onChange={handleSelectReasonsChange}
-                      onInputChange={handleReasonsInputChange}
-                      isSearchable
-                    />
-                    // <select
-                    //   className="w-[350px] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border mt-2"
-                    //   value={rejectionReason}
-                    //   onChange={(e) => setRejectionReason(e.target.value)}
-                    // >
-                    //   <option value="">Select rejection reason</option>
-
-                    // </select>
-                  )}
                 </div>
                 <div className="w-full">
                   <textarea
@@ -473,4 +528,4 @@ const SupervisorFormADetails = () => {
   );
 };
 
-export default SupervisorFormADetails;
+export default SupervisorFormNCXDetails;

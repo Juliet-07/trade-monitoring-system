@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
-import Header from "./Header";
+import Header from "../../components/Header";
 import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
 
@@ -15,7 +15,7 @@ const DaemonFormADetails = () => {
   const [modal, setModal] = useState(false);
 
   const GetFormDetailsById = () => {
-    const url = `${baseURL}/v1/FormA/FormADetails?formID=${ID}`;
+    const url = `${baseURL}/v1/FormA/FormAPendingDetails?formID=${ID}`;
     axios
       .get(url, {
         headers: {
@@ -45,7 +45,7 @@ const DaemonFormADetails = () => {
           <TbArrowBackUp color="#475467" />
           <span className="text-gray-600 mx-2">Back</span>
         </Link>
-        <div className="my-10 font-mono">
+        <div className="my-6 font-mono">
           <p className="font-semibold">
             Application:
             <span className="text-gray-600">
@@ -187,41 +187,49 @@ const DaemonFormADetails = () => {
               </div>
             </div>
             {/* 6 */}
-            <div className="w-[405px] h-[310px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[320px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
                 Beneficiary Information
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
-                <p>
-                  <span className="text-gray-600 text-xs">Name:</span>{" "}
-                  {formDetails?.consigneeName}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Email:</span>{" "}
-                  {formDetails?.consigneeEmail}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">
-                    Passport Number:
-                  </span>{" "}
-                  {formDetails?.consigneeAddressLine1}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Phone Number:</span>{" "}
-                  {formDetails?.consigneePhone}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Address Line 1:</span>{" "}
-                  {formDetails?.consigneeAddressLine1}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">City:</span>{" "}
-                  {formDetails?.consigneeAddressCity}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">State:</span>{" "}
-                  {formDetails?.consigneeAddressState}
-                </p>
+                {formDetails?.beneficiaries?.map((user) => (
+                  <>
+                    <p>
+                      <span className="text-gray-600 text-xs">Name:</span>{" "}
+                      {user?.name}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">Email:</span>{" "}
+                      {user?.email}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">
+                        Passport Number:
+                      </span>{" "}
+                      {user?.passportNumber}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">
+                        Phone Number:
+                      </span>{" "}
+                      {user?.phone}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">
+                        Address Line 1:
+                      </span>{" "}
+                      {user?.addressLine1}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">City:</span>{" "}
+                      {user?.city}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">State:</span>{" "}
+                      {user?.state}
+                    </p>
+                  </>
+                ))}
               </div>
             </div>
             {/* 7 */}
@@ -230,12 +238,14 @@ const DaemonFormADetails = () => {
                 Requested Information
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
-                <p>
-                  <span className="text-gray-600 text-xs">
-                    Amount Requested:
-                  </span>{" "}
-                  {formDetails?.pia?.name}
-                </p>
+                {formDetails?.beneficiaries?.map((user) => (
+                  <p>
+                    <span className="text-gray-600 text-xs">
+                      Amount Requested:
+                    </span>{" "}
+                    {user?.amountRequested}
+                  </p>
+                ))}
               </div>
             </div>
             {/* 8 */}
@@ -244,29 +254,49 @@ const DaemonFormADetails = () => {
                 Travel Information
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
-                <p>
-                  <span className="text-gray-600 text-xs">
-                    Destination Country:
-                  </span>{" "}
-                  {formDetails?.pia?.name}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Ait Ticket No.:</span>{" "}
-                  {formDetails?.pia?.name}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Airline Route:</span>{" "}
-                  {formDetails?.pia?.name}
-                </p>
+                {formDetails?.beneficiaries?.map((user) => (
+                  <>
+                    <p>
+                      <span className="text-gray-600 text-xs">
+                        Destination Country:
+                      </span>{" "}
+                      {user?.country?.name}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">
+                        Air Ticket No.:
+                      </span>{" "}
+                      {user?.airTicketNumber}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">
+                        Airline Route:
+                      </span>{" "}
+                      {user?.route}
+                    </p>
+                  </>
+                ))}
               </div>
             </div>
           </div>
-          <div>Workflow Notes</div>
+          <div className="py-3 font-semibold">Workflow Notes</div>
           {formDetails?.workflowNotes?.map((note) => (
-            <div>
+            <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
               <p>
-                <span className="text-gray-600 text-xs">Airline Route:</span>{" "}
+                <span className="text-gray-600 text-xs">Actor:</span>{" "}
+                {note?.applicationStatusCode}
+              </p>
+              <p>
+                <span className="text-gray-600 text-xs">Action:</span>{" "}
                 {note?.name}
+              </p>
+              <p>
+                <span className="text-gray-600 text-xs">Note:</span>{" "}
+                {note?.noteDescription}
+              </p>
+              <p>
+                <span className="text-gray-600 text-xs">Date Created:</span>{" "}
+                {note?.createdAt}
               </p>
             </div>
           ))}

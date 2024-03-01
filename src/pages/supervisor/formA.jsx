@@ -105,7 +105,7 @@ const SupervisorFormA = () => {
                         <FaEye
                           onClick={() => {
                             setSelectedRowData(a.id);
-                            navigate(`/Daemon-formADetails/${a.id}`);
+                            navigate(`/supervisor/formADetails/${a.id}`);
                           }}
                         />
                       </span>
@@ -177,7 +177,12 @@ const SupervisorFormA = () => {
                 <td className="flex items-center p-4">
                   <div className="group relative">
                     <span className=" hover:text-black cursor-pointer">
-                      <FaEye />
+                      <FaEye
+                        onClick={() => {
+                          setSelectedRowData(a.id);
+                          navigate(`/supervisor/formADetails/${a.id}`);
+                        }}
+                      />
                     </span>
                     <small className="hidden group-hover:block absolute -top-4 -left-1">
                       View

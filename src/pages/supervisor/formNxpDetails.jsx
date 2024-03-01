@@ -6,9 +6,8 @@ import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
 import Modal from "../../components/Modal";
 
-const SupervisorFormADetails = () => {
+const SupervisorFormNxpDetails = () => {
   const { id: ID } = useParams();
-  //   console.log(userID, "id");
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
@@ -17,12 +16,11 @@ const SupervisorFormADetails = () => {
   const [approval, setApproval] = useState(false);
   const [rejection, setRejection] = useState(false);
   const [note, setNote] = useState("");
-  const [reasons, setReasons] = useState([]);
   const [rejectionReason, setRejectionReason] = useState("");
   const [inputValue, setValue] = useState("");
 
   const GetFormDetailsById = () => {
-    const url = `${baseURL}/v1/FormA/FormAPendingDetails?formID=${ID}`;
+    const url = `${baseURL}/NXP/FormnxpDetails?formID=${ID}`;
     axios
       .get(url, {
         headers: {
@@ -37,16 +35,8 @@ const SupervisorFormADetails = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleReasonsInputChange = (value) => {
-    setValue(value);
-  };
-  const handleSelectReasonsChange = (value) => {
-    setRejectionReason(value);
-    console.log(value, "selected reason");
-  };
-
   const sendApproval = () => {
-    const url = `${baseURL}/v1/FormA/FormAADBReviewer?applicationNumber=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/NXP/FormnxpADBReviewer?applicationNumber=${formDetails?.applicationNumber}`;
     const payload = {
       approved: approval,
       note: note,
@@ -65,29 +55,25 @@ const SupervisorFormADetails = () => {
       })
       .then((response) => {
         console.log(response, "response from approval");
-        alert(response.data.responseMessage);
-        if (response.status === 200) {
-          // Close the modal upon successful registration
-          setModal(false);
-        }
+        alert(response.data.message);
       });
   };
+
   useEffect(() => {
     GetFormDetailsById();
   }, []);
-
   return (
     <>
       <Header />
       <div className="p-10">
         <Link
-          to="/supervisor/formA"
+          to="/supervisor/formNxp"
           className="flex items-center p-2 w-[85px] h-10 border border-gray-100 rounded-lg"
         >
           <TbArrowBackUp color="#475467" />
           <span className="text-gray-600 mx-2">Back</span>
         </Link>
-        <div className="my-6 font-mono">
+        <div className="my-4 font-mono">
           <div className="w-full flex items-center justify-between h-10 py-10">
             <p className="font-semibold">
               Application:
@@ -102,7 +88,8 @@ const SupervisorFormADetails = () => {
               Action
             </div>
           </div>
-          <div className="my-4 grid grid-cols-3 gap-y-4">
+
+          <div className="w-full grid md:grid-cols-3 2xl:grid-cols-4 gap-y-4">
             {/* 1 */}
             <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
@@ -111,43 +98,50 @@ const SupervisorFormADetails = () => {
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
                   <span className="text-gray-600">Status:</span>{" "}
-                  {formDetails.status}
+                  {formDetails?.status}
                 </p>
                 <p>
                   <span className="text-gray-600">Stage:</span>{" "}
-                  {formDetails.statusCode}
+                  {formDetails?.statusCode}
                 </p>
                 <p>
                   <span className="text-gray-600">Application Number:</span>{" "}
-                  {formDetails.applicationNumber}
+                  {formDetails?.applicationNumber}
                 </p>
                 <p>
                   <span className="text-gray-600">Form Number:</span>{" "}
-                  {formDetails.formNumber}
+                  {formDetails?.formNumber}
+                </p>
+                <p>
+                  <span className="text-gray-600">Sector:</span>{" "}
+                  {formDetails?.sector}
                 </p>
                 <p>
                   <span className="text-gray-600">Date Created:</span>{" "}
-                  {formDetails.createdAt}
+                  {formDetails?.createdAt}
                 </p>
               </div>
             </div>
             {/* 2 */}
             <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Applicant Information
+                Exporter Information
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
                   <span className="text-gray-600">Name:</span>{" "}
-                  {formDetails?.applicantName}
+                  {formDetails?.contact?.name}
                 </p>
                 <p>
                   <span className="text-gray-600">Email:</span>{" "}
                   {formDetails?.contact?.emailAddress}
                 </p>
                 <p>
-                  <span className="text-gray-600">BVN:</span>{" "}
-                  {formDetails?.applicantTINBVN}
+                  <span className="text-gray-600">TIN:</span> {formDetails?.tin}
+                </p>
+                <p>
+                  <span className="text-gray-600">RC Number:</span>{" "}
+                  {formDetails?.contact?.rcNumber}
                 </p>
                 <p>
                   <span className="text-gray-600">Phone Number:</span>{" "}
@@ -160,7 +154,7 @@ const SupervisorFormADetails = () => {
               </div>
             </div>
             {/* 3 */}
-            {/* <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
                 Documents
               </div>
@@ -185,11 +179,11 @@ const SupervisorFormADetails = () => {
                   </>
                 ))}
               </div>
-            </div> */}
+            </div>
             {/* 4 */}
             <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Bank Details
+                Financial Details
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
@@ -206,150 +200,136 @@ const SupervisorFormADetails = () => {
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">
-                    Naira Account Number:
+                    Designated Bank:
                   </span>{" "}
+                  {formDetails?.designatedBank?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Account Number:</span>{" "}
                   {formDetails?.accountNumber}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Exchange Rate:</span>{" "}
+                  {formDetails?.exchangeRate}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Payment Mode:</span>{" "}
+                  {formDetails?.paymentMode?.name}
                 </p>
               </div>
             </div>
             {/* 5 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[400px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Trade Services
+                General Shipment Details
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
                 <p>
                   <span className="text-gray-600 text-xs">
-                    Is Valid For FOREX:
+                    Loading Terminal:
                   </span>{" "}
-                  {formDetails?.validForForex}
-                </p>
-                <p>
-                  <span className="text-gray-600 text-xs">Trade Category:</span>{" "}
-                  {formDetails?.transactionPurpose?.tradeCategory?.name}
+                  Loading Terminal
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">
-                    Transaction Purpose:
+                    Mode of Transportation:
                   </span>{" "}
-                  {formDetails?.transactionPurpose?.name}
+                  {formDetails?.transportationMode?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Port of Shipment:
+                  </span>{" "}
+                  {formDetails?.portShipment?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Destination Country:
+                  </span>{" "}
+                  {formDetails?.accountNumber}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Port of Discharge:
+                  </span>{" "}
+                  {formDetails?.exchangeRate}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">MEA:</span>{" "}
+                  {formDetails?.monitoringMea?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Temporary Shipping Line:
+                  </span>{" "}
+                  {formDetails?.tempShippingLine?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">By Order Of:</span>{" "}
+                  {formDetails?.byOrderOf}
                 </p>
               </div>
             </div>
             {/* 6 */}
-            <div className="w-[405px] h-[320px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[400px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Beneficiary Information
+                Consignee Information
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
-                {formDetails?.beneficiaries?.map((user) => (
-                  <>
-                    <p>
-                      <span className="text-gray-600 text-xs">Name:</span>{" "}
-                      {user?.name}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">Email:</span>{" "}
-                      {user?.email}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Passport Number:
-                      </span>{" "}
-                      {user?.passportNumber}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Phone Number:
-                      </span>{" "}
-                      {user?.phone}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Address Line 1:
-                      </span>{" "}
-                      {user?.addressLine1}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">City:</span>{" "}
-                      {user?.city}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">State:</span>{" "}
-                      {user?.state}
-                    </p>
-                  </>
-                ))}
+                <p>
+                  <span className="text-gray-600 text-xs">Name:</span>{" "}
+                  {formDetails?.consigneeName}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Email:</span>{" "}
+                  {formDetails?.consigneeEmail}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Phone Number:</span>{" "}
+                  {formDetails?.consigneePhone}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Address Line 1:</span>{" "}
+                  {formDetails?.consigneeAddressLine1}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Address Line 2:</span>{" "}
+                  {formDetails?.consigneeAddressLine1}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">City:</span>{" "}
+                  {formDetails?.consigneeAddressCity}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">State:</span>{" "}
+                  {formDetails?.consigneeAddressState}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Country:</span>{" "}
+                  {formDetails?.consigneeCountry?.name}
+                </p>
               </div>
             </div>
             {/* 7 */}
             <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Requested Information
+                PIA
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
-                {formDetails?.beneficiaries?.map((user) => (
-                  <p>
-                    <span className="text-gray-600 text-xs">
-                      Amount Requested:
-                    </span>{" "}
-                    {user?.amountRequested}
-                  </p>
-                ))}
+                <p>
+                  <span className="text-gray-600 text-xs">Name:</span>{" "}
+                  {formDetails?.pia?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Inspection Location:
+                  </span>{" "}
+                  {formDetails?.inspectionLocation?.name}
+                </p>
               </div>
             </div>
             {/* 8 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
-              <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
-                Travel Information
-              </div>
-              <div className="px-4 py-2 grid gap-4 text-sm">
-                {formDetails?.beneficiaries?.map((user) => (
-                  <>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Destination Country:
-                      </span>{" "}
-                      {user?.country?.name}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Air Ticket No.:
-                      </span>{" "}
-                      {user?.airTicketNumber}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Airline Route:
-                      </span>{" "}
-                      {user?.route}
-                    </p>
-                  </>
-                ))}
-              </div>
-            </div>
           </div>
-          <div className="py-3 font-semibold">Workflow Notes</div>
-          {formDetails?.workflowNotes?.map((note) => (
-            <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
-              <p>
-                <span className="text-gray-600 text-xs">Actor:</span>{" "}
-                {note?.applicationStatusCode}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Action:</span>{" "}
-                {note?.name}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Note:</span>{" "}
-                {note?.noteDescription}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Date Created:</span>{" "}
-                {note?.createdAt}
-              </p>
-            </div>
-          ))}
         </div>
         <Modal isVisible={modal} onClose={() => setModal(false)}>
           <div className="font-mono w-[500px]">
@@ -386,7 +366,7 @@ const SupervisorFormADetails = () => {
                 </div>
               </div>
               <div className="w-full">
-                <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
+              <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
                 <div className="w-full flex items-center mb-4">
                   <input
                     id="approval-radio"
@@ -428,24 +408,6 @@ const SupervisorFormADetails = () => {
                       Request Reviewer Modification
                     </label>
                   </div>
-
-                  {rejection && (
-                    <Select
-                      options={reasons}
-                      defaultValue={rejectionReason}
-                      onChange={handleSelectReasonsChange}
-                      onInputChange={handleReasonsInputChange}
-                      isSearchable
-                    />
-                    // <select
-                    //   className="w-[350px] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border mt-2"
-                    //   value={rejectionReason}
-                    //   onChange={(e) => setRejectionReason(e.target.value)}
-                    // >
-                    //   <option value="">Select rejection reason</option>
-
-                    // </select>
-                  )}
                 </div>
                 <div className="w-full">
                   <textarea
@@ -473,4 +435,4 @@ const SupervisorFormADetails = () => {
   );
 };
 
-export default SupervisorFormADetails;
+export default SupervisorFormNxpDetails;

@@ -5,7 +5,7 @@ import Layout from "./Layout";
 import { FaEye } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
 
-const SupervisorFormNCX = () => {
+const ReviewerFormNCX = () => {
   const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
@@ -105,7 +105,7 @@ const SupervisorFormNCX = () => {
                         <FaEye
                           onClick={() => {
                             setSelectedRowData(ncx.id);
-                            navigate(`/supervisor/formNcxDetails/${ncx.id}`);
+                            navigate(`/Reviewer-formNcxDetails/${ncx.id}`);
                           }}
                         />
                       </span>
@@ -178,7 +178,7 @@ const SupervisorFormNCX = () => {
                       <FaEye
                         onClick={() => {
                           setSelectedRowData(ncx.id);
-                          navigate(`/supervisor/formNcxDetails/${ncx.id}`);
+                          navigate(`/Reviewer-formNcxDetails/${ncx.id}`);
                         }}
                       />
                     </span>
@@ -205,4 +205,4 @@ const SupervisorFormNCX = () => {
   );
 };
 
-export default SupervisorFormNCX;
+export default ReviewerFormNCX;
