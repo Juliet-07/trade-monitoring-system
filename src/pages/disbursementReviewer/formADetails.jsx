@@ -73,13 +73,14 @@ const DBS_ReviewerFormADetails = () => {
   };
 
   const sendApproval = () => {
-    const url = `${baseURL}/v1/FormA/FormAADBReviewer?applicationNumber=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/DisbursmentReviewer/ADBReviewerApproval`;
     const payload = {
-      approved: approval,
+      recommendedForApproval: approval,
       note: note,
-      daemonReviewerName: "string",
-      daemonSupervisorName: "string",
-      rejectionReasonCode: rejection ? rejectionReason.label : "string",
+      formTypeName: "Form A",
+      formID: formDetails?.applicationNumber,
+      supervisorName: "Olayemi Gisarin",
+      rejectionReason: rejection ? rejectionReason.label : "null",
     };
 
     console.log(payload);
@@ -92,7 +93,7 @@ const DBS_ReviewerFormADetails = () => {
       })
       .then((response) => {
         console.log(response, "response from approval");
-        alert(response.data.responseMessage);
+        alert(response.data.data);
         if (response.status === 200) {
           // Close the modal upon successful registration
           setModal(false);

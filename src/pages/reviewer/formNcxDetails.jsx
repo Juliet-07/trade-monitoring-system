@@ -12,6 +12,7 @@ const ReviewerFormNCXDetails = () => {
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
+  const userName = userInfo.userName
   const [formDetails, setFormDetails] = useState({});
   const [modal, setModal] = useState(false);
   const [approval, setApproval] = useState(false);
@@ -72,13 +73,15 @@ const ReviewerFormNCXDetails = () => {
   };
 
   const sendApproval = () => {
-    const url = `${baseURL}/NCX/PostNCXAdbReviewer?ncx_applicationNo=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/Reviewer/ADBReviewerApproval`;
     const payload = {
-      approved: approval,
+      recommendedForApproval: approval,
       note: note,
-      daemonReviewerName: "string",
-      daemonSupervisorName: "string",
-      rejectionReasonCode: rejection ? rejectionReason.label : "string",
+      daemonReviewerName: userName,
+      supervisorName: "No Supervisor yet",
+      rejectionReason: rejection ? rejectionReason.label : "Not Rejected",
+      formTypeName: "Form NCX",
+      formID: formDetails.applicationNumber,
     };
 
     console.log(payload);
@@ -91,7 +94,7 @@ const ReviewerFormNCXDetails = () => {
       })
       .then((response) => {
         console.log(response, "response from approval");
-        alert(response.data.responseMessage);
+        alert(response.data.data);
         if (response.status === 200) {
           // Close the modal upon successful registration
           setModal(false);

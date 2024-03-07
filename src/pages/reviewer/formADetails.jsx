@@ -13,6 +13,7 @@ const ReviewerFormADetails = () => {
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
+  const userName = userInfo.userName;
   const [formDetails, setFormDetails] = useState({});
   const [modal, setModal] = useState(false);
   const [approval, setApproval] = useState(false);
@@ -73,13 +74,15 @@ const ReviewerFormADetails = () => {
   };
 
   const sendApproval = () => {
-    const url = `${baseURL}/v1/FormA/FormAADBReviewer?applicationNumber=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/Reviewer/ADBReviewerApproval`;
     const payload = {
-      approved: approval,
+      recommendedForApproval: approval,
       note: note,
-      daemonReviewerName: "string",
-      daemonSupervisorName: "string",
-      rejectionReasonCode: rejection ? rejectionReason.label : "string",
+      daemonReviewerName: userName,
+      supervisorName: "No Supervisor yet",
+      rejectionReason: rejection ? rejectionReason.label : "Not Rejected",
+      formTypeName: "Form A",
+      formID: formDetails.applicationNumber,
     };
 
     console.log(payload);
@@ -92,13 +95,14 @@ const ReviewerFormADetails = () => {
       })
       .then((response) => {
         console.log(response, "response from approval");
-        alert(response.data.responseMessage);
+        alert(response.data.data);
         if (response.status === 200) {
           // Close the modal upon successful registration
           setModal(false);
         }
       });
   };
+  
   useEffect(() => {
     GetFormDetailsById();
     GetReasons();
@@ -357,7 +361,7 @@ const ReviewerFormADetails = () => {
               </div>
             </div>
           </div>
-          <div className="py-3 font-semibold">Workflow Notes</div>
+          {/* <div className="py-3 font-semibold">Workflow Notes</div>
           {formDetails?.workflowNotes?.map((note) => (
             <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
               <p>
@@ -377,7 +381,7 @@ const ReviewerFormADetails = () => {
                 {note?.createdAt}
               </p>
             </div>
-          ))}
+          ))} */}
         </div>
         <Modal isVisible={modal} onClose={() => setModal(false)}>
           <div className="font-mono w-[500px]">
@@ -392,7 +396,7 @@ const ReviewerFormADetails = () => {
                     </p>
                     <p>
                       <span className="text-gray-600 text-xs">BVN:</span>{" "}
-                      {user?.email}
+                      {user?.bvn}
                     </p>
                     <p>
                       <span className="text-gray-600 text-xs">

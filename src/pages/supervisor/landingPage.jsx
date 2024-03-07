@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import { FaEye } from "react-icons/fa";
+import { MdSkipPrevious, MdSkipNext } from "react-icons/md";
 
 const SupervisorFormNXP = () => {
   const navigate = useNavigate();
@@ -10,18 +11,28 @@ const SupervisorFormNXP = () => {
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7; // Set the number of items per page
   const [pendingNXP, setPendingNXP] = useState([]);
   const [processedNXP, setProcessedNXP] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState({});
 
   // Logic to paginate the data
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = pendingNXP.slice(indexOfFirstItem, indexOfLastItem);
+  const recordsPerPage = 10; // Set the number of items per page
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = pendingNXP.slice(firstIndex, lastIndex);
+  const npages = Math.ceil(pendingNXP.length / recordsPerPage);
+  const numbers = [...Array(npages + 1).keys()].slice(1);
 
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // for logic to paginate processed table
+  const recordsPerProcessedPage = 10; // Set the number of items per page
+  const lastProcessedIndex = currentPage * recordsPerPage;
+  const firstProcessedIndex = lastIndex - recordsPerPage;
+  const processedRecords = processedNXP.slice(
+    firstProcessedIndex,
+    lastProcessedIndex
+  );
+  const nPages = Math.ceil(processedNXP.length / recordsPerProcessedPage);
+  const numbersForProcessed = [...Array(npages + 1).keys()].slice(1);
 
   const GetPendingNXP = () => {
     const url = `${baseURL}/NXP/Pendingnxps`;
@@ -59,6 +70,19 @@ const SupervisorFormNXP = () => {
       .catch((err) => console.log(err));
   };
 
+  const prevPage = () => {
+    if (currentPage !== firstIndex) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const changeCurrentPage = (id) => {
+    setCurrentPage(id);
+  };
+  const nextPage = () => {
+    if (currentPage !== lastIndex) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
   useEffect(() => {
     GetPendingNXP();
     GetProcessedNXP();
@@ -70,37 +94,41 @@ const SupervisorFormNXP = () => {
         <div className="shadow py-2 px-2">
           <h4 className="text-sm mb-5">Pending Applications</h4>
           <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
-            <thead className="h-10 border-b">
+            <thead className="border-b">
               <tr className="text-center">
-                <td>Application No.</td>
-                <td>Form Number</td>
-                <td>Applicant Name</td>
-                <td>FoB Value($)</td>
-                <td>NESS Levy (N)</td>
-                <td>Last Modified</td>
-                <td className="text-yellow-600">Stage</td>
-                <td>Date Created</td>
+                <td className="py-3">S/N</td>
+                <td className="py-3">Application No.</td>
+                <td className="py-3">Form Number</td>
+                <td className="py-3">Applicant Name</td>
+                <td className="py-3">FoB Value($)</td>
+                <td className="py-3">NESS Levy (N)</td>
+                <td className="py-3">Last Modified</td>
+                <td className="py-3 text-yellow-600">Stage</td>
+                <td className="py-3">Date Created</td>
                 <td></td>
               </tr>
             </thead>
             <tbody>
-              {pendingNXP.map((nxp, index) => (
+              {records.map((nxp, index) => (
                 <tr
                   key={index}
-                  className={`h-10 text-center ${
-                    parseInt(nxp.applicationNumber) % 2 === 1
-                      ? "bg-gray-200"
-                      : ""
-                  }`}
+                  className={`text-center ${
+                    index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                  } hover:bg-gray-200`}
                 >
-                  <td>{nxp.applicationNumber}</td>
-                  <td>{nxp.formNumber}</td>
-                  <td>{nxp.applicantName}</td>
-                  <td>$ {nxp.initialShipmentTotalDollarFoB}</td>
-                  <td>N {nxp.initialShipmentNessLevyPayable}</td>
-                  <td>{nxp.updatedAt}</td>
-                  <td className="text-yellow-600">{nxp.statusCode}</td>
-                  <td>{nxp.createdAt}</td>
+                  <td className="py-2">{index + 1}</td>
+                  <td className="py-2">{nxp.applicationNumber}</td>
+                  <td className="py-2">{nxp.formNumber}</td>
+                  <td className="py-2">{nxp.applicantName}</td>
+                  <td className="py-2">
+                    $ {nxp.initialShipmentTotalDollarFoB}
+                  </td>
+                  <td className="py-2">
+                    N {nxp.initialShipmentNessLevyPayable}
+                  </td>
+                  <td className="py-2">{nxp.updatedAt}</td>
+                  <td className="py-2 text-yellow-600">{nxp.statusCode}</td>
+                  <td className="py-2">{nxp.createdAt}</td>
                   <td className="flex items-center p-4">
                     <div className="group relative">
                       <span className=" hover:text-black cursor-pointer">
@@ -115,14 +143,6 @@ const SupervisorFormNXP = () => {
                         View
                       </small>
                     </div>
-                    {/* <div className="group relative">
-                      <span className=" hover:text-black cursor-pointer">
-                        <FaDownload />
-                      </span>
-                      <small className="hidden group-hover:block absolute -top-4 -left-1">
-                        Download
-                      </small>
-                    </div> */}
                   </td>
                 </tr>
               ))}
@@ -131,51 +151,70 @@ const SupervisorFormNXP = () => {
         </div>
       </div>
       {/* Pagination */}
-      <div className="flex justify-center mt-4">
-        {[...Array(Math.ceil(pendingNXP.length / itemsPerPage)).keys()].map(
-          (number) => (
-            <button
-              key={number + 1}
-              onClick={() => paginate(number + 1)}
-              className="px-3 py-1 bg-gray-200 mx-1 rounded"
+      <nav className="flex items-center justify-center my-4">
+        <ul className="flex flex-row items-center">
+          <li>
+            <MdSkipPrevious
+              size={20}
+              onClick={prevPage}
+              className="cursor-pointer"
+            />
+          </li>
+          {numbers.map((n, i) => (
+            <li
+              key={i}
+              className={`text-xs p-2 ${
+                currentPage === n ? "bg-red-900 rounded-full text-white" : ""
+              }`}
             >
-              {number + 1}
-            </button>
-          )
-        )}
-      </div>
+              <a href="#" onClick={() => changeCurrentPage(npages)}>
+                {n}
+              </a>
+            </li>
+          ))}
+          <li>
+            <MdSkipNext
+              size={20}
+              onClick={nextPage}
+              className="cursor-pointer"
+            />
+          </li>
+        </ul>
+      </nav>
       <div className="shadow py-2 px-2 font-semibold font-mono">
         <h4 className="text-sm mb-5 text-green-500">Processed Applications</h4>
         <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
-          <thead className="h-10 border-b">
+          <thead className="border-b">
             <tr className="text-center">
-              <td>Application No.</td>
-              <td>Form Number</td>
-              <td>Applicant Name</td>
-              <td>FoB Value($)</td>
-              <td>NESS Levy(N)</td>
-              <td>Last Modified</td>
-              <td className="text-yellow-600">Stage</td>
-              <td>Date Created</td>
+              <td className="py-3">S/N</td>
+              <td className="py-3">Application No.</td>
+              <td className="py-3">Form Number</td>
+              <td className="py-3">Applicant Name</td>
+              <td className="py-3">FoB Value($)</td>
+              <td className="py-3">NESS Levy(N)</td>
+              <td className="py-3">Last Modified</td>
+              <td className="py-3 text-yellow-600">Stage</td>
+              <td className="py-3">Date Created</td>
               <td></td>
             </tr>
           </thead>
           <tbody>
-            {processedNXP.map((nxp, index) => (
+            {processedRecords.map((nxp, index) => (
               <tr
                 key={index}
-                className={`h-10 text-center ${
-                  parseInt(nxp.applicationNumber) % 2 === 1 ? "bg-gray-200" : ""
-                }`}
+                className={`text-center ${
+                  index % 2 === 0 ? "bg-gray-100" : "bg-green-100"
+                } hover:bg-green-200`}
               >
-                <td>{nxp.applicationNumber}</td>
-                <td>{nxp.formNumber}</td>
-                <td>{nxp.applicantName}</td>
-                <td>$ {nxp.initialShipmentTotalDollarFoB}</td>
-                <td>N {nxp.initialShipmentNessLevyPayable}</td>
-                <td>{nxp.updatedAt}</td>
-                <td className="text-yellow-600">{nxp.statusCode}</td>
-                <td>{nxp.createdAt}</td>
+                <td className="py-2">{index + 1}</td>
+                <td className="py-2">{nxp.applicationNumber}</td>
+                <td className="py-2">{nxp.formNumber}</td>
+                <td className="py-2">{nxp.applicantName}</td>
+                <td className="py-2">$ {nxp.initialShipmentTotalDollarFoB}</td>
+                <td className="py-2">N {nxp.initialShipmentNessLevyPayable}</td>
+                <td className="py-2">{nxp.updatedAt}</td>
+                <td className="py-2 text-yellow-600">{nxp.statusCode}</td>
+                <td className="py-2">{nxp.createdAt}</td>
                 <td className="flex items-center p-4">
                   <div className="group relative">
                     <span className=" hover:text-black cursor-pointer">
@@ -205,6 +244,36 @@ const SupervisorFormNXP = () => {
         </table>
       </div>
       {/* Pagination */}
+      <nav className="flex items-center justify-center my-4">
+        <ul className="flex flex-row items-center">
+          <li>
+            <MdSkipPrevious
+              size={20}
+              onClick={prevPage}
+              className="cursor-pointer"
+            />
+          </li>
+          {numbers.map((n, i) => (
+            <li
+              key={i}
+              className={`text-xs p-2 ${
+                currentPage === n ? "bg-green-900 rounded-full text-white" : ""
+              }`}
+            >
+              <a href="#" onClick={() => changeCurrentPage(nPages)}>
+                {n}
+              </a>
+            </li>
+          ))}
+          <li>
+            <MdSkipNext
+              size={20}
+              onClick={nextPage}
+              className="cursor-pointer"
+            />
+          </li>
+        </ul>
+      </nav>
     </Layout>
   );
 };

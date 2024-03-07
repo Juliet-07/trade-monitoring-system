@@ -46,13 +46,52 @@ const DBS_SupervisorFormADetails = () => {
   };
 
   const sendApproval = () => {
-    const url = `${baseURL}/v1/FormA/FormAADBReviewer?applicationNumber=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/DisbursmentSupervisor/DisbursmentSupervisorApproval?applicationNumber=${formDetails?.applicationNumber}`;
+
+    // const beneficiariesWithDisbursements = formDetails?.beneficiaries?.map(
+    //   (beneficiary) => ({
+    //     id: beneficiary?.id,
+    //     disbursements:
+    //       beneficiary?.disbursements?.map((disburse) => ({
+    //         id: null,
+    //         bvn: beneficiary?.bvn,
+    //         amount: beneficiary?.amountRequested,
+    //         exchangeRate: formDetails?.currency?.sellRate,
+    //         transactionCode: "042082",
+    //         paymentModeCode: "007",
+    //         dateDisbursed: "2024-01-03",
+    //         transactionCodeFileId: "ccc8ee86-d31b-4f9f-b6db-185ef55464d7",
+    //       })) || [],
+    //   })
+    // );
+
+    const beneficiariesWithDisbursements = formDetails?.beneficiaries?.map(
+      (beneficiary) => ({
+        id: beneficiary?.id,
+        disbursements: [
+          {
+            id: null,
+            bvn: beneficiary?.bvn,
+            amount: beneficiary?.amountRequested,
+            // exchangeRate: beneficiary?.currency?.sellRate.toString(),
+            exchangeRate: "10",
+            transactionCode: "042082",
+            paymentModeCode: "007",
+            dateDisbursed: "2024-01-03",
+            transactionCodeFileId: "ccc8ee86-d31b-4f9f-b6db-185ef55464d7",
+          },
+        ],
+      })
+    );
+
     const payload = {
-      approved: approval,
+      approved: "true",
       note: note,
-      daemonReviewerName: "string",
-      daemonSupervisorName: "string",
-      rejectionReasonCode: rejection ? rejectionReason.label : "string",
+      daemonReviewName: "Adejinmi Olusoji",
+      daemonSupervisorName: "Olayemi Gisarin",
+      beneficiaries: beneficiariesWithDisbursements,
+      disbursementsCloseOut: false,
+      rejectionStakeholder: rejection ? rejectionReason.label : null,
     };
 
     console.log(payload);

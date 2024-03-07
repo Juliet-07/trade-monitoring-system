@@ -77,6 +77,8 @@ const Login = () => {
   //     const passwordInput = document.getElementById("passwordInput");
   //     passwordInput.onpaste = (e) => e.preventDefault();
   //   };
+
+  // Deamon_Reviwer = Tolulope Buraimoh
   return (
     <div className="w-full h-full">
       {loading && <Loader />}
@@ -96,7 +98,7 @@ const Login = () => {
         </div> */}
         </div>
         <div className="w-full flex items-center justify-center relative z-[3] p-20 mt-20">
-          <div className="w-[500px] h-[450px] text-black flex flex-col bg-white rounded-xl p-10">
+          <div className="w-[500px] h-[350px] text-black flex flex-col bg-white rounded-xl p-10">
             <form
               onSubmit={handleSubmit(handleLoginValidation)}
               className="font-mono"
@@ -123,7 +125,7 @@ const Login = () => {
                   htmlFor="passwordInput"
                   className="block text-sm text-gray-800"
                 >
-                  AD Password
+                   Password
                 </label>
                 <input
                   id="passwordInput"
@@ -135,7 +137,7 @@ const Login = () => {
                   placeholder="Enter profile password"
                 />
               </div>
-              <div className="mt-4">
+              {/* <div className="mt-4">
                 <label
                   htmlFor="password"
                   className="block text-sm text-gray-800"
@@ -151,7 +153,7 @@ const Login = () => {
                   onChange={handleChange}
                   placeholder="Enter trms password"
                 />
-              </div>
+              </div> */}
               <div className="mt-10">
                 <button
                   type="submit"

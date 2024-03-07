@@ -12,6 +12,7 @@ const SupervisorFormNCXDetails = () => {
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
+  const userName = userInfo.userName;
   const [formDetails, setFormDetails] = useState({});
   const [modal, setModal] = useState(false);
   const [approval, setApproval] = useState(false);
@@ -72,13 +73,13 @@ const SupervisorFormNCXDetails = () => {
   };
 
   const sendApproval = () => {
-    const url = `${baseURL}/NCX/PostNCXAdbReviewer?ncx_applicationNo=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/Supervisor/ADBSupervisorFormNCXApproval?ncx_applicationNo=${formDetails?.applicationNumber}&formTypeName=Form NCX`;
     const payload = {
       approved: approval,
       note: note,
-      daemonReviewerName: "string",
-      daemonSupervisorName: "string",
-      rejectionReasonCode: rejection ? rejectionReason.label : "string",
+      daemonReviewerName: "Tolulope Buraimoh",
+      daemonSupervisorName: userName,
+      rejectionReasonCode: rejection ? rejectionReason.label : null,
     };
 
     console.log(payload);

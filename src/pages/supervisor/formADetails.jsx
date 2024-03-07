@@ -12,6 +12,7 @@ const SupervisorFormADetails = () => {
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
+  const userName = userInfo.userName;
   const [formDetails, setFormDetails] = useState({});
   const [modal, setModal] = useState(false);
   const [approval, setApproval] = useState(false);
@@ -46,13 +47,13 @@ const SupervisorFormADetails = () => {
   };
 
   const sendApproval = () => {
-    const url = `${baseURL}/v1/FormA/FormAADBReviewer?applicationNumber=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/Supervisor/ADBSupervisorFormAApproval?applicationNumber=${formDetails?.applicationNumber}`;
     const payload = {
       approved: approval,
       note: note,
-      daemonReviewerName: "string",
-      daemonSupervisorName: "string",
-      rejectionReasonCode: rejection ? rejectionReason.label : "string",
+      daemonReviewName: "Tolulope Buraimoh",
+      daemonSupervisorName: userName,
+      rejectionReasonCode: rejection ? rejectionReason.label : null,
     };
 
     console.log(payload);
@@ -65,7 +66,7 @@ const SupervisorFormADetails = () => {
       })
       .then((response) => {
         console.log(response, "response from approval");
-        alert(response.data.responseMessage);
+        alert(response.data.responseResult);
         if (response.status === 200) {
           // Close the modal upon successful registration
           setModal(false);

@@ -159,21 +159,21 @@ const DBS_SupervisorFormA = () => {
             </tr>
           </thead>
           <tbody>
-            {processedFormA.map((nxp, index) => (
+            {processedFormA.map((a, index) => (
               <tr
                 key={index}
                 className={`h-10 text-center ${
-                  parseInt(nxp.applicationNumber) % 2 === 1 ? "bg-gray-200" : ""
+                  parseInt(a.applicationNumber) % 2 === 1 ? "bg-gray-200" : ""
                 }`}
               >
-                <td>{nxp.applicationNumber}</td>
-                <td>{nxp.formNumber}</td>
-                <td>{nxp.applicantName}</td>
-                <td>$ {nxp.initialShipmentTotalDollarFoB}</td>
-                <td>N {nxp.initialShipmentNessLevyPayable}</td>
-                <td>{nxp.updatedAt}</td>
-                <td className="text-yellow-600">{nxp.statusCode}</td>
-                <td>{nxp.createdAt}</td>
+                <td>{a.applicationNumber}</td>
+                <td>{a.formNumber}</td>
+                <td>{a.applicantName}</td>
+                <td>$ {a.initialShipmentTotalDollarFoB}</td>
+                <td>N {a.initialShipmentNessLevyPayable}</td>
+                <td>{a.updatedAt}</td>
+                <td className="text-yellow-600">{a.statusCode}</td>
+                <td>{a.createdAt}</td>
                 <td className="flex items-center p-4">
                   <div className="group relative">
                     <span className=" hover:text-black cursor-pointer">

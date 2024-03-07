@@ -11,6 +11,7 @@ const SupervisorFormNxpDetails = () => {
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
+  const userName = userInfo.userName;
   const [formDetails, setFormDetails] = useState({});
   const [modal, setModal] = useState(false);
   const [approval, setApproval] = useState(false);
@@ -36,13 +37,13 @@ const SupervisorFormNxpDetails = () => {
   };
 
   const sendApproval = () => {
-    const url = `${baseURL}/NXP/FormnxpADBReviewer?applicationNumber=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/Supervisor/ADBSupervisorFormNXPApproval?applicationNumber=${formDetails?.applicationNumber}&formTypeName=Form NXP`;
     const payload = {
       approved: approval,
       note: note,
-      daemonReviewerName: "string",
-      daemonSupervisorName: "string",
-      rejectionReasonCode: rejection ? rejectionReason.label : "string",
+      daemonReviewerName: "Tolulope Buraimoh",
+      daemonSupervisorName: userName,
+      rejectionReasonCode: rejection ? rejectionReason.label : null,
     };
 
     console.log(payload);
@@ -55,7 +56,7 @@ const SupervisorFormNxpDetails = () => {
       })
       .then((response) => {
         console.log(response, "response from approval");
-        alert(response.data.message);
+        alert(response.data.responseMessage);
       });
   };
 
@@ -366,7 +367,7 @@ const SupervisorFormNxpDetails = () => {
                 </div>
               </div>
               <div className="w-full">
-              <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
+                <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
                 <div className="w-full flex items-center mb-4">
                   <input
                     id="approval-radio"
