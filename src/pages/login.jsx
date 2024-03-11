@@ -14,10 +14,9 @@ const Login = () => {
   const initialValues = {
     email: "",
     adpassword: "",
-    nibsspassword: "",
   };
   const [loginDetails, setLoginDetails] = useState(initialValues);
-  const { email, adpassword, nibsspassword } = loginDetails;
+  const { email, adpassword } = loginDetails;
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginDetails({ ...loginDetails, [name]: value });
@@ -125,7 +124,7 @@ const Login = () => {
                   htmlFor="passwordInput"
                   className="block text-sm text-gray-800"
                 >
-                   Password
+                  Password
                 </label>
                 <input
                   id="passwordInput"

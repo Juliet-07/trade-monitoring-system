@@ -5,6 +5,7 @@ import Header from "../../components/Header";
 import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
 import Modal from "../../components/Modal";
+import Select from "react-select";
 
 const DBS_SupervisorFormADetails = () => {
   const { id: ID } = useParams();
@@ -12,6 +13,7 @@ const DBS_SupervisorFormADetails = () => {
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
+  const userName = userInfo.userName;
   const [formDetails, setFormDetails] = useState({});
   const [modal, setModal] = useState(false);
   const [approval, setApproval] = useState(false);
@@ -20,6 +22,14 @@ const DBS_SupervisorFormADetails = () => {
   const [reasons, setReasons] = useState([]);
   const [rejectionReason, setRejectionReason] = useState("");
   const [inputValue, setValue] = useState("");
+  const [disbursedAmount, setDisbursedAmount] = useState("");
+  const [exchangeRate, setExchangeRate] = useState("");
+  const [transactionCode, setTransactionCode] = useState("");
+  const [paymentModeCode, setPaymentModeCode] = useState("");
+  const [dateDisbursed, setDateDisbursed] = useState("");
+  const [label, setLabel] = useState("image for test");
+  const [file, setFile] = useState(null);
+  const [fileID, setFileID] = useState("");
 
   const GetFormDetailsById = () => {
     const url = `${baseURL}/v1/FormA/FormAPendingDetails?formID=${ID}`;
@@ -45,6 +55,37 @@ const DBS_SupervisorFormADetails = () => {
     console.log(value, "selected reason");
   };
 
+  const fileUploadHandler = (e) => {
+    console.log(e.target.files, "files");
+    const files = e.target.files[0];
+    setFile(files);
+  };
+
+  const uploadFile = (e) => {
+    let id;
+    e.preventDefault();
+    const url = `${baseURL}/Files/upload`;
+    const formData = new FormData();
+    formData.append("label", label);
+    formData.append("file", file);
+    axios
+      .post(url, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response, "response from uploading file");
+        id = response.data.responseResult.fileId;
+        console.log(id, "id");
+        setFileID(response.data.responseResult.fileId);
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+      });
+  };
+
   const sendApproval = () => {
     const url = `${baseURL}/DisbursmentSupervisor/DisbursmentSupervisorApproval?applicationNumber=${formDetails?.applicationNumber}`;
 
@@ -65,6 +106,8 @@ const DBS_SupervisorFormADetails = () => {
     //   })
     // );
 
+    const disbursedAmountInt = parseInt(disbursedAmount);
+
     const beneficiariesWithDisbursements = formDetails?.beneficiaries?.map(
       (beneficiary) => ({
         id: beneficiary?.id,
@@ -72,13 +115,18 @@ const DBS_SupervisorFormADetails = () => {
           {
             id: null,
             bvn: beneficiary?.bvn,
-            amount: beneficiary?.amountRequested,
+            amount: disbursedAmountInt,
+            // amount: beneficiary?.amountRequested,
             // exchangeRate: beneficiary?.currency?.sellRate.toString(),
-            exchangeRate: "10",
-            transactionCode: "042082",
-            paymentModeCode: "007",
-            dateDisbursed: "2024-01-03",
-            transactionCodeFileId: "ccc8ee86-d31b-4f9f-b6db-185ef55464d7",
+            // exchangeRate: "10",
+            exhangeRate: exchangeRate,
+            // transactionCode: "042082",
+            transactionCode: transactionCode,
+            // paymentModeCode: "007",
+            paymentModeCode: paymentModeCode,
+            // dateDisbursed: "2024-01-03",
+            dateDisbursed: dateDisbursed,
+            transactionCodeFileId: fileID,
           },
         ],
       })
@@ -88,9 +136,9 @@ const DBS_SupervisorFormADetails = () => {
       approved: "true",
       note: note,
       daemonReviewName: "Adejinmi Olusoji",
-      daemonSupervisorName: "Olayemi Gisarin",
+      daemonSupervisorName: userName,
       beneficiaries: beneficiariesWithDisbursements,
-      disbursementsCloseOut: false,
+      disbursementsCloseOut: true,
       rejectionStakeholder: rejection ? rejectionReason.label : null,
     };
 
@@ -111,9 +159,10 @@ const DBS_SupervisorFormADetails = () => {
         }
       });
   };
+
   useEffect(() => {
     GetFormDetailsById();
-  }, []);
+  }, [file, fileID]);
 
   return (
     <>
@@ -395,7 +444,7 @@ const DBS_SupervisorFormADetails = () => {
         <Modal isVisible={modal} onClose={() => setModal(false)}>
           <div className="font-mono w-[500px]">
             <form className="w-full flex flex-col items-center justify-center">
-              <div className="w-full">
+              {/* <div className="w-full">
                 <p className="font-semibold my-2 text-green-500">
                   Reviewer Action
                 </p>
@@ -425,9 +474,109 @@ const DBS_SupervisorFormADetails = () => {
                     </span>
                   </p>
                 </div>
-              </div>
+              </div> */}
+
               <div className="w-full">
                 <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
+                <div className="mt-4">
+                  {formDetails?.beneficiaries?.map((beneficiary) => (
+                    <label
+                      htmlFor="details"
+                      className="text-[#2b2e35] font-semibold mb-2"
+                    >
+                      <span>Requested Amount:</span>
+                      <span>{beneficiary.amountRequested}</span>
+                    </label>
+                  ))}
+
+                  <input
+                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                    name="disbursedAmount"
+                    placeholder="Disbursement Amount"
+                    value={disbursedAmount}
+                    onChange={(e) => setDisbursedAmount(e.target.value)}
+                    // required
+                  />
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="details"
+                    className="text-[#2b2e35] font-semibold mb-2"
+                  >
+                    Exchange Rate
+                  </label>
+
+                  <input
+                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                    name="exchangeRate"
+                    placeholder="Disbursement Amount"
+                    value={exchangeRate}
+                    onChange={(e) => setExchangeRate(e.target.value)}
+                    // required
+                  />
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="details"
+                    className="text-[#2b2e35] font-semibold mb-2"
+                  >
+                    Transaction Code
+                  </label>
+
+                  <input
+                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                    name="exchangeRate"
+                    placeholder="Disbursement Amount"
+                    value={transactionCode}
+                    onChange={(e) => setTransactionCode(e.target.value)}
+                    // required
+                  />
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="details"
+                    className="text-[#2b2e35] font-semibold mb-2"
+                  >
+                    Payment Mode
+                  </label>
+
+                  <input
+                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                    name="exchangeRate"
+                    placeholder="Disbursement Amount"
+                    value={paymentModeCode}
+                    onChange={(e) => setPaymentModeCode(e.target.value)}
+                    // required
+                  />
+                </div>
+                <div className="mt-4">
+                  <label
+                    htmlFor="details"
+                    className="text-[#2b2e35] font-semibold mb-2"
+                  >
+                    Date Disbursed
+                  </label>
+
+                  <input
+                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                    name="exchangeRate"
+                    placeholder="Disbursement Amount"
+                    value={dateDisbursed}
+                    onChange={(e) => setDateDisbursed(e.target.value)}
+                    // required
+                  />
+                </div>
+                <div className="mt-4 flex items-center justify-between">
+                  {/* <label
+                    htmlFor="details"
+                    className="text-[#2b2e35] font-semibold mb-2"
+                  >
+                    Upload Document
+                  </label> */}
+
+                  <input type="file" name="file" onChange={fileUploadHandler} />
+                  <button onClick={(e) => uploadFile(e)}>Generate ID</button>
+                </div>
                 <div className="w-full flex items-center mb-4">
                   <input
                     id="approval-radio"

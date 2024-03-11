@@ -21,6 +21,7 @@ const AdminPage = () => {
   const [inputValue, setValue] = useState("");
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const infoCards = [
     {

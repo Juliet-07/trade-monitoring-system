@@ -18,7 +18,7 @@ const ReviewerFormNxpDetails = () => {
   const [approval, setApproval] = useState(false);
   const [rejection, setRejection] = useState(false);
   const [note, setNote] = useState("");
-  const [reasons, setReasons] = useState([]);
+  const [reason, setReason] = useState([]);
   const [rejectionReason, setRejectionReason] = useState("");
   const [inputValue, setValue] = useState("");
 
@@ -66,8 +66,8 @@ const ReviewerFormNxpDetails = () => {
             label: reason?.name,
           };
         });
-        setReasons(reasons);
-        // console.log(roles, "checking");
+        setReason(reasons);
+        console.log(reasons, "checking");
       })
       .catch((err) => console.log(err));
   };
@@ -424,7 +424,7 @@ const ReviewerFormNxpDetails = () => {
 
                   {rejection && (
                     <Select
-                      options={reasons}
+                      options={reason}
                       defaultValue={rejectionReason}
                       onChange={handleSelectReasonsChange}
                       onInputChange={handleReasonsInputChange}

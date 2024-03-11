@@ -102,10 +102,10 @@ const ReviewerFormA = () => {
                 <td className="py-3">Application No.</td>
                 <td className="py-3">Form Number</td>
                 <td className="py-3">Applicant Name</td>
-                <td className="py-3">FoB Value($)</td>
-                <td className="py-3">NESS Levy (N)</td>
+                <td className="py-3">Bank Branch</td>
+                <td className="py-3">Amount Requested</td>
                 <td className="py-3">Last Modified</td>
-                <td className="py-3 text-yellow-600">Stage</td>
+                <td className="text-yellow-600">Stage</td>
                 <td className="py-3">Date Created</td>
                 <td></td>
               </tr>
@@ -122,8 +122,11 @@ const ReviewerFormA = () => {
                   <td className="py-2">{a.applicationNumber}</td>
                   <td className="py-2">{a.formNumber}</td>
                   <td className="py-2">{a.applicantName}</td>
-                  <td className="py-2">$ {a.initialShipmentTotalDollarFoB}</td>
-                  <td className="py-2">N {a.initialShipmentNessLevyPayable}</td>
+                  <td className="py-2">{a.processingBankBranchName}</td>
+                  <td className="py-2">
+                    <span className="px-2">{a.currencyCode}</span>
+                    {a.totalAmountRequested}
+                  </td>
                   <td className="py-2">{a.updatedAt}</td>
                   <td className="py-2 text-yellow-600">{a.statusCode}</td>
                   <td className="py-2">{a.createdAt}</td>
@@ -185,14 +188,14 @@ const ReviewerFormA = () => {
         <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
           <thead className="border-b">
             <tr className="text-center">
-              <td className="py-3">S/N </td>
+              <td className="py-3">S/N</td>
               <td className="py-3">Application No.</td>
               <td className="py-3">Form Number</td>
               <td className="py-3">Applicant Name</td>
-              <td className="py-3">FoB Value($)</td>
-              <td className="py-3">NESS Levy(N)</td>
+              <td className="py-3">Bank Branch</td>
+              <td className="py-3">Amount Requested</td>
               <td className="py-3">Last Modified</td>
-              <td className="py-3 text-yellow-600">Stage</td>
+              <td className="text-yellow-600">Stage</td>
               <td className="py-3">Date Created</td>
               <td></td>
             </tr>
@@ -209,8 +212,11 @@ const ReviewerFormA = () => {
                 <td className="py-2">{a.applicationNumber}</td>
                 <td className="py-2">{a.formNumber}</td>
                 <td className="py-2">{a.applicantName}</td>
-                <td className="py-2">$ {a.initialShipmentTotalDollarFoB}</td>
-                <td className="py-2">N {a.initialShipmentNessLevyPayable}</td>
+                <td className="py-2">{a.processingBankBranchName}</td>
+                <td className="py-2">
+                  <span className="px-2">{a.currencyCode}</span>
+                  {a.totalAmountRequested}
+                </td>
                 <td className="py-2">{a.updatedAt}</td>
                 <td className="py-2 text-yellow-600">{a.statusCode}</td>
                 <td className="py-2">{a.createdAt}</td>
