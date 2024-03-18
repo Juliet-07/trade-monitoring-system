@@ -6,6 +6,7 @@ import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
 import Modal from "../../components/Modal";
 import Select from "react-select";
+import { data } from "autoprefixer";
 
 const ReviewerFormNxpDetails = () => {
   const { id: ID } = useParams();
@@ -72,16 +73,45 @@ const ReviewerFormNxpDetails = () => {
       .catch((err) => console.log(err));
   };
 
+  const GetAcountInfo = () => {
+    const url = `http://192.168.207.18:7072/api/CustomerEnquiry/AccountNameEnquiry?accountNumber=${formDetails.accountNumber}`;
+
+    axios
+      .get(url, {
+        headers: {
+          ApiKey:
+            "764709gbAmapdgpmJCYKiZdpvgTyyFKnkO4TZlF38vpjNjP8565MjpnugDR3exgm94F0zZu0LRtSpKvgRiEXtJ83nLWsZhgdmsqKaR7igtXYU7FgXrhtlvRIhC1dBjk4v+JrJVu/g3aMXEBxip2DBAbaEtESJsdmrWDHFViSNTskIUUekzShjC6c8xf4urMxd+WCHEWFOCu+nuUkAqcPEfug==",
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response, "account inquiry");
+        alert(`Account Inquiry: ${(response.data.message)}`);
+      })
+      .catch((err) => console.log(err));
+  };
+
   const sendApproval = () => {
     const url = `${baseURL}/Reviewer/ADBReviewerApproval`;
+    // const payload1 = {
+    //   recommendedForApproval: true,
+    //   note: "string",
+    //   rejectionReason: "string",
+    //   formTypeName: "string",
+    //   formID: "string",
+    //   applicationNumber: "string",
+    //   email: "string",
+    // };
     const payload = {
       recommendedForApproval: approval,
       note: note,
-      daemonReviewerName: userName,
-      supervisorName: "No Supervisor yet",
+      // daemonReviewerName: userName,
+      // supervisorName: "No Supervisor yet",
       rejectionReason: rejection ? rejectionReason.label : "Not Rejected",
       formTypeName: "Form NXP",
-      formID: formDetails.applicationNumber,
+      applicationNumber: formDetails.applicationNumber,
+      formID: ID,
+      email: "sarah.omoike@premiumtrustbank.com",
     };
 
     console.log(payload);
@@ -105,6 +135,7 @@ const ReviewerFormNxpDetails = () => {
   useEffect(() => {
     GetFormDetailsById();
     GetReasons();
+    GetAcountInfo();
   }, []);
   return (
     <>
@@ -181,7 +212,8 @@ const ReviewerFormNxpDetails = () => {
                   {formDetails?.contact?.emailAddress}
                 </p>
                 <p>
-                  <span className="text-gray-600">TIN:</span> {formDetails?.tin}
+                  <span className="text-gray-600">TIN:</span>{" "}
+                  {formDetails?.contact?.taxIdentificationNumber}
                 </p>
                 <p>
                   <span className="text-gray-600">RC Number:</span>{" "}
@@ -198,10 +230,33 @@ const ReviewerFormNxpDetails = () => {
               </div>
             </div>
             {/* 3 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[330px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
                 Documents
               </div>
+              <p className="px-4 pt-2 font-semibold">Permit</p>
+              <div className="px-4 py-2 grid gap-4 text-sm">
+                {formDetails?.permits?.map((file) => (
+                  <>
+                    <div className="flex items-center">
+                      <FaFileCode />
+                      <p className="mx-2 text-red-600">
+                        {file?.file?.fileName}
+                      </p>
+                      <FaDownload color="red" />
+                    </div>
+                    <p className="text-xs">
+                      <span className="pr-2">Lable:</span>
+                      {file?.permit?.name}
+                    </p>
+                    <p className="text-xs">
+                      <span className="pr-2">Date Created:</span>
+                      {file?.file?.createdAt}
+                    </p>
+                  </>
+                ))}
+              </div>
+              <p className="px-4 pt-2 font-semibold">Attachment</p>
               <div className="px-4 py-2 grid gap-4 text-sm">
                 {formDetails?.attachments?.map((file) => (
                   <>
@@ -213,11 +268,11 @@ const ReviewerFormNxpDetails = () => {
                       <FaDownload color="red" />
                     </div>
                     <p className="text-xs">
-                      <span>Lable:</span>
+                      <span className="pr-2">Lable:</span>
                       {file?.file?.label}
                     </p>
                     <p className="text-xs">
-                      <span>Date Created:</span>
+                      <span className="pr-2">Date Created:</span>
                       {file?.file?.createdAt}
                     </p>
                   </>
@@ -225,7 +280,7 @@ const ReviewerFormNxpDetails = () => {
               </div>
             </div>
             {/* 4 */}
-            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+            <div className="w-[405px] h-[350px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
               <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
                 Financial Details
               </div>
@@ -253,6 +308,18 @@ const ReviewerFormNxpDetails = () => {
                   {formDetails?.accountNumber}
                 </p>
                 <p>
+                  <span className="text-gray-600 text-xs">
+                    Naira Account Number:
+                  </span>{" "}
+                  {formDetails?.accountNumber}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">
+                    Ness Levy Payable:
+                  </span>{" "}
+                  {formDetails?.nessLevyPayable}
+                </p>
+                <p>
                   <span className="text-gray-600 text-xs">Exchange Rate:</span>{" "}
                   {formDetails?.exchangeRate}
                 </p>
@@ -268,12 +335,12 @@ const ReviewerFormNxpDetails = () => {
                 General Shipment Details
               </div>
               <div className="px-4 py-2 grid gap-4 text-sm">
-                <p>
+                {/* <p>
                   <span className="text-gray-600 text-xs">
                     Loading Terminal:
                   </span>{" "}
                   Loading Terminal
-                </p>
+                </p> */}
                 <p>
                   <span className="text-gray-600 text-xs">
                     Mode of Transportation:
@@ -294,7 +361,7 @@ const ReviewerFormNxpDetails = () => {
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">
-                    Port of Discharge:
+                    Port of Destination:
                   </span>{" "}
                   {formDetails?.exchangeRate}
                 </p>
@@ -338,7 +405,7 @@ const ReviewerFormNxpDetails = () => {
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">Address Line 2:</span>{" "}
-                  {formDetails?.consigneeAddressLine1}
+                  {formDetails?.consigneeAddressLine2}
                 </p>
                 <p>
                   <span className="text-gray-600 text-xs">City:</span>{" "}
@@ -374,6 +441,83 @@ const ReviewerFormNxpDetails = () => {
             </div>
             {/* 8 */}
           </div>
+          <div className="w-full shadow p-2 font-mono border my-10">
+            <h4 className=" text-yellow-500 px-4 text-lg font-semibold">
+              Initial Shipment
+            </h4>
+            <div className="w-full flex items-center justify-between p-4 text-gray-700">
+              <div>
+                <p className="font-semibold">Expected Shipment Date:</p>
+                <p>{formDetails?.initialShipment?.expectedShipmentDate}</p>
+              </div>
+              <div>
+                <p className="font-semibold">Vessel Name:</p>
+                <p>{formDetails?.initialShipment?.vesselName}</p>
+              </div>
+            </div>
+          </div>
+          <div className="w-full shadow p-2  font-mono border my-10">
+            <h4 className=" mb-5 text-green-500 text-lg font-semibold">
+              Items
+            </h4>
+            <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
+              <thead className="h-10 border-b">
+                <tr>
+                  <td>#</td>
+                  <td>HS Code</td>
+                  <td>Packaging Mode</td>
+                  {/* <td>Applicant Name</td> */}
+                  <td>Unit of Measurement</td>
+                  <td>Quantity</td>
+                  <td>Net Weight</td>
+                  <td>Gross Weight</td>
+                </tr>
+              </thead>
+              <tbody>
+                {formDetails?.initialShipment?.items?.map((item, index) => (
+                  <tr key={index} className="h-10 bg-gray-50">
+                    <td>{index + 1}</td>
+                    <td>{item?.hsCode?.name}</td>
+                    <td>{item?.packagingMode?.name}</td>
+                    <td>{item?.unitOfMeasurement?.name}</td>
+                    <td>{item?.quantity}</td>
+                    <td>{item?.netWeight}</td>
+                    <td>{item?.grossWeight}</td>
+                  </tr>
+                ))}
+                <tr className="border-t border-b">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td className="p-4">Total:</td>
+                  <td>{formDetails?.totalQuantity}</td>
+                  <td>{formDetails?.totalNetWeight}</td>
+                  <td>{formDetails?.totalGrossWeight}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="py-3 font-semibold">Workflow Notes</div>
+          {formDetails?.workflowNotes?.map((note) => (
+            <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
+              <p>
+                <span className="text-gray-600 text-xs">Actor:</span>{" "}
+                {note?.applicationStatusCode}
+              </p>
+              <p>
+                <span className="text-gray-600 text-xs">Action:</span>{" "}
+                {note?.name}
+              </p>
+              <p>
+                <span className="text-gray-600 text-xs">Note:</span>{" "}
+                {note?.noteDescription}
+              </p>
+              <p>
+                <span className="text-gray-600 text-xs">Date Created:</span>{" "}
+                {note?.createdAt}
+              </p>
+            </div>
+          ))}
         </div>
         <Modal isVisible={modal} onClose={() => setModal(false)}>
           <div className="font-mono w-[500px]">

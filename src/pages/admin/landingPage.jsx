@@ -7,6 +7,7 @@ import Modal from "../../components/Modal";
 import { FaEye } from "react-icons/fa";
 import Select from "react-select";
 import { useForm } from "react-hook-form";
+import { MdSkipPrevious, MdSkipNext } from "react-icons/md";
 
 const AdminPage = () => {
   const navigate = useNavigate();
@@ -37,6 +38,14 @@ const AdminPage = () => {
       figure: 0,
     },
   ];
+
+  // Logic to paginate the data
+  const recordsPerPage = 10; // Set the number of items per page
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = users.slice(firstIndex, lastIndex);
+  const npages = Math.ceil(users.length / recordsPerPage);
+  const numbers = [...Array(npages + 1).keys()].slice(1);
 
   const initialValues = {
     firstName: "",
@@ -134,6 +143,20 @@ const AdminPage = () => {
       });
   };
 
+  const prevPage = () => {
+    if (currentPage !== firstIndex) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const changeCurrentPage = (id) => {
+    setCurrentPage(id);
+  };
+  const nextPage = () => {
+    if (currentPage !== lastIndex) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   useEffect(() => {
     GetUser();
     GetRoles();
@@ -192,6 +215,7 @@ const AdminPage = () => {
           <table className="w-full table bg-white text-sm text-left text-gray-500 dark:text-gray-400 px-4 divide-y-4">
             <thead className="text-xs font-mono text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
               <tr>
+                <th className="p-4"> S/N</th>
                 <th className="p-4"> Name</th>
                 <th className="p-4">Email</th>
                 <th className="p-4">Phone Number</th>
@@ -201,10 +225,11 @@ const AdminPage = () => {
               </tr>
             </thead>
             <tbody>
-              {users.length > 0 &&
-                users.map((user, index) => {
+              {records.length > 0 &&
+                records.map((user, index) => {
                   return (
                     <tr key={index}>
+                      <td className="p-4">{index + 1}</td>
                       <td className="px-6 whitespace-nowrap">
                         {`${user?.firstName} ${user?.lastName}`}
                       </td>
@@ -234,6 +259,37 @@ const AdminPage = () => {
             </tbody>
           </table>
         </div>
+        {/* Pagination */}
+        <nav className="flex items-center justify-center my-4">
+          <ul className="flex flex-row items-center">
+            <li>
+              <MdSkipPrevious
+                size={20}
+                onClick={prevPage}
+                className="cursor-pointer"
+              />
+            </li>
+            {numbers.map((n, i) => (
+              <li
+                key={i}
+                className={`text-xs p-2 ${
+                  currentPage === n ? "bg-red-900 rounded-full text-white" : ""
+                }`}
+              >
+                <a href="#" onClick={() => changeCurrentPage(npages)}>
+                  {n}
+                </a>
+              </li>
+            ))}
+            <li>
+              <MdSkipNext
+                size={20}
+                onClick={nextPage}
+                className="cursor-pointer"
+              />
+            </li>
+          </ul>
+        </nav>
       </div>
       <Modal isVisible={modal} onClose={() => setModal(false)}>
         <div className="p-6 flex flex-col users-center justify-center">

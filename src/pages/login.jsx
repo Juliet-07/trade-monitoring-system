@@ -42,29 +42,28 @@ const Login = () => {
           let trmsUser = JSON.stringify(user.data);
           localStorage.setItem("trmsUser", trmsUser);
           console.log(user.data.role);
-          if (user.data.role && user.data.role.includes("SUPER_ADMIN")) {
-            navigate("/admin");
-          }
-          if (user.data.role && user.data.role.includes("FI_DAEMON")) {
-            navigate("/daemon/formNxp");
-          }
-          if (user.data.role && user.data.role.includes("FI_REVIEWER")) {
-            navigate("/reviewer/formNxp");
-          }
-          if (user.data.role && user.data.role.includes("FI_SUPERVISOR")) {
-            navigate("/supervisor/formNxp");
-          }
-          if (
-            user.data.role &&
-            user.data.role.includes("FI_DISBURSEMENT_REVIEWER")
-          ) {
-            navigate("/dbs_reviewer/formA");
-          }
-          if (
-            user.data.role &&
-            user.data.role.includes("FI_DISBURSEMENT_SUPERVISOR")
-          ) {
-            navigate("/dbs_supervisor/formA");
+          if (user.data.role) {
+            if (user.data.role.includes("SUPER_ADMIN")) {
+              navigate("/admin");
+            } else if (user.data.role.includes("FI_DAEMON")) {
+              navigate("/daemon/formNxp");
+            } else if (user.data.role.includes("FI_REVIEWER")) {
+              if (user.data.role.includes("FI_DISBURSEMENT_REVIEWER")) {
+                navigate("/reviewer/formNxp");
+              } else {
+                navigate("/reviewer/formNxp");
+              }
+            } else if (user.data.role.includes("FI_SUPERVISOR")) {
+              if (user.data.role.includes("FI_DISBURSEMENT_SUPERVISOR")) {
+                navigate("/supervisor/formNxp");
+              } else {
+                navigate("/supervisor/formNxp");
+              }
+            } else if (user.data.role.includes("FI_DISBURSEMENT_REVIEWER")) {
+              navigate("/dbs_reviewer/formA");
+            } else if (user.data.role.includes("FI_DISBURSEMENT_SUPERVISOR")) {
+              navigate("/dbs_supervisor/formA");
+            }
           }
         });
     } catch (error) {

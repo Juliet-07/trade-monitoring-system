@@ -78,11 +78,13 @@ const ReviewerFormADetails = () => {
     const payload = {
       recommendedForApproval: approval,
       note: note,
-      daemonReviewerName: userName,
-      supervisorName: "No Supervisor yet",
+      // daemonReviewerName: userName,
+      // supervisorName: "No Supervisor yet",
       rejectionReason: rejection ? rejectionReason.label : "Not Rejected",
       formTypeName: "Form A",
-      formID: formDetails.applicationNumber,
+      applicationNumber: formDetails.applicationNumber,
+      formID: ID,
+      email: "sarah.omoike@premiumtrustbank.com",
     };
 
     console.log(payload);
@@ -102,7 +104,7 @@ const ReviewerFormADetails = () => {
         }
       });
   };
-  
+
   useEffect(() => {
     GetFormDetailsById();
     GetReasons();
@@ -119,8 +121,8 @@ const ReviewerFormADetails = () => {
           <TbArrowBackUp color="#475467" />
           <span className="text-gray-600 mx-2">Back</span>
         </Link>
-        <div className="my-6 font-mono">
-          <div className="w-full flex items-center justify-between h-10 py-10">
+        <div className="my-4 font-mono">
+          <div className="w-full flex items-center justify-between h-10 py-6">
             <p className="font-semibold">
               Application:
               <span className="text-gray-600">
@@ -174,13 +176,14 @@ const ReviewerFormADetails = () => {
                   {formDetails?.applicantName}
                 </p>
                 <p>
-                  <span className="text-gray-600">Email:</span>{" "}
-                  {formDetails?.contact?.emailAddress}
-                </p>
-                <p>
                   <span className="text-gray-600">BVN:</span>{" "}
                   {formDetails?.applicantTINBVN}
                 </p>
+                <p>
+                  <span className="text-gray-600">Email:</span>{" "}
+                  {formDetails?.contact?.emailAddress}
+                </p>
+
                 <p>
                   <span className="text-gray-600">Phone Number:</span>{" "}
                   {formDetails?.contact?.phone}
@@ -240,7 +243,7 @@ const ReviewerFormADetails = () => {
                   <span className="text-gray-600 text-xs">
                     Naira Account Number:
                   </span>{" "}
-                  {formDetails?.accountNumber}
+                  {formDetails?.processingFeeAccountNumber}
                 </p>
               </div>
             </div>
@@ -279,16 +282,16 @@ const ReviewerFormADetails = () => {
                     <p>
                       <span className="text-gray-600 text-xs">Name:</span>{" "}
                       {user?.name}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">Email:</span>{" "}
-                      {user?.email}
-                    </p>
+                    </p>{" "}
                     <p>
                       <span className="text-gray-600 text-xs">
                         Passport Number:
                       </span>{" "}
                       {user?.passportNumber}
+                    </p>
+                    <p>
+                      <span className="text-gray-600 text-xs">Email:</span>{" "}
+                      {user?.email}
                     </p>
                     <p>
                       <span className="text-gray-600 text-xs">
@@ -324,7 +327,8 @@ const ReviewerFormADetails = () => {
                   <p>
                     <span className="text-gray-600 text-xs">
                       Amount Requested:
-                    </span>{" "}
+                    </span>
+                    <span className="px-2">{user?.currency?.code}</span>
                     {user?.amountRequested}
                   </p>
                 ))}
@@ -401,7 +405,8 @@ const ReviewerFormADetails = () => {
                     <p>
                       <span className="text-gray-600 text-xs">
                         Amount Requested:
-                      </span>{" "}
+                      </span>
+                      <span className="px-2">{user?.currency?.code}</span>
                       {user?.amountRequested}
                     </p>
                   </div>
