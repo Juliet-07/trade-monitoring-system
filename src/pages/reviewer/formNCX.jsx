@@ -100,10 +100,10 @@ const ReviewerFormNCX = () => {
                 <td className="py-3">Application No.</td>
                 <td className="py-3">Form Number</td>
                 <td className="py-3">Applicant Name</td>
-                <td className="py-3">Branch</td>
-                <td className="py-3">Last Modified</td>
+                <td className="py-3">Processing Bank</td>
                 <td className="py-3 text-yellow-600">Stage</td>
-                <td className="py-3">Date Created</td>
+                <td className="py-3">Last Modified</td>
+                <td className="py-3">Created At</td>
                 <td></td>
               </tr>
             </thead>
@@ -120,8 +120,8 @@ const ReviewerFormNCX = () => {
                   <td className="py-2">{ncx.formNumber}</td>
                   <td className="py-2">{ncx.applicantName}</td>
                   <td className="py-2">{ncx.processingBankBranchName}</td>
-                  <td className="py-2">{ncx.updatedAt}</td>
                   <td className="py-2 text-yellow-600">{ncx.statusCode}</td>
+                  <td className="py-2">{ncx.updatedAt}</td>
                   <td className="py-2">{ncx.createdAt}</td>
                   <td className="flex items-center p-4">
                     <div className="group relative">

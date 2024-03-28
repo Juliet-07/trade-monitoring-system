@@ -34,8 +34,9 @@ const SupervisorFormNXP = () => {
   const nPages = Math.ceil(processedNXP.length / recordsPerProcessedPage);
   const numbersForProcessed = [...Array(npages + 1).keys()].slice(1);
 
+  
   const GetPendingNXP = () => {
-    const url = `${baseURL}/NXP/Pendingnxps`;
+    const url = `${baseURL}/Supervisor/ADBSupervisorPendingFormNXP`;
     let data;
     axios
       .get(url, {
@@ -46,8 +47,7 @@ const SupervisorFormNXP = () => {
       })
       .then((response) => {
         console.log(response.data, "Pending NXP");
-        data = response.data.responseResult.content;
-        setPendingNXP(data);
+        setPendingNXP(response.data);
       })
       .catch((err) => console.log(err));
   };
@@ -100,10 +100,10 @@ const SupervisorFormNXP = () => {
                 <td className="py-3">Application No.</td>
                 <td className="py-3">Form Number</td>
                 <td className="py-3">Applicant Name</td>
-                <td className="py-3">FoB Value($)</td>
-                <td className="py-3">NESS Levy (N)</td>
-                <td className="py-3">Last Modified</td>
-                <td className="py-3 text-yellow-600">Stage</td>
+                {/* <td className="py-3">FoB Value($)</td> */}
+                {/* <td className="py-3">NESS Levy (N)</td> */}
+                {/* <td className="py-3">Last Modified</td> */}
+                {/* <td className="py-3 text-yellow-600">Stage</td> */}
                 <td className="py-3">Date Created</td>
                 <td></td>
               </tr>
@@ -120,14 +120,14 @@ const SupervisorFormNXP = () => {
                   <td className="py-2">{nxp.applicationNumber}</td>
                   <td className="py-2">{nxp.formNumber}</td>
                   <td className="py-2">{nxp.applicantName}</td>
-                  <td className="py-2">
+                  {/* <td className="py-2">
                     $ {nxp.initialShipmentTotalDollarFoB}
-                  </td>
-                  <td className="py-2">
+                  </td> */}
+                  {/* <td className="py-2">
                     N {nxp.initialShipmentNessLevyPayable}
-                  </td>
-                  <td className="py-2">{nxp.updatedAt}</td>
-                  <td className="py-2 text-yellow-600">{nxp.statusCode}</td>
+                  </td> */}
+                  {/* <td className="py-2">{nxp.updatedAt}</td> */}
+                  {/* <td className="py-2 text-yellow-600">{nxp.statusCode}</td> */}
                   <td className="py-2">{nxp.createdAt}</td>
                   <td className="flex items-center p-4">
                     <div className="group relative">
@@ -135,7 +135,7 @@ const SupervisorFormNXP = () => {
                         <FaEye
                           onClick={() => {
                             setSelectedRowData(nxp.id);
-                            navigate(`/supervisor/formNxpDetails/${nxp.id}`);
+                            navigate(`/supervisor/formNxpDetails/${nxp.formId}`);
                           }}
                         />
                       </span>

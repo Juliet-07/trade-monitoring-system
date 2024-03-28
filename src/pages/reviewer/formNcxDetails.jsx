@@ -72,16 +72,37 @@ const ReviewerFormNCXDetails = () => {
       .catch((err) => console.log(err));
   };
 
+  const GetAcountInfo = () => {
+    const url = `http://192.168.207.18:7072/api/CustomerEnquiry/AccountNameEnquiry?accountNumber=${formDetails.accountNumber}`;
+
+    axios
+      .get(url, {
+        headers: {
+          ApiKey:
+            "764709gbAmapdgpmJCYKiZdpvgTyyFKnkO4TZlF38vpjNjP8565MjpnugDR3exgm94F0zZu0LRtSpKvgRiEXtJ83nLWsZhgdmsqKaR7igtXYU7FgXrhtlvRIhC1dBjk4v+JrJVu/g3aMXEBxip2DBAbaEtESJsdmrWDHFViSNTskIUUekzShjC6c8xf4urMxd+WCHEWFOCu+nuUkAqcPEfug==",
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response, "account inquiry");
+        alert(`Account Inquiry: ${(response.data.message)}`);
+      })
+      .catch((err) => console.log(err));
+  };
+
   const sendApproval = () => {
     const url = `${baseURL}/Reviewer/ADBReviewerApproval`;
     const payload = {
       recommendedForApproval: approval,
       note: note,
-      daemonReviewerName: userName,
-      supervisorName: "No Supervisor yet",
       rejectionReason: rejection ? rejectionReason.label : "Not Rejected",
       formTypeName: "Form NCX",
-      formID: formDetails.applicationNumber,
+      formID: ID,
+      applicationNumber: formDetails.applicationNumber,
+      supervisorEmail: "sarah.omoike@premiumtrustbank.com",
+      //customerNairaAccountNo: formDetails.accountNumber,
+      customerNairaAccountNo: "0070001060",
+      applicantName: formDetails?.contact?.firstName
     };
 
     console.log(payload);
@@ -105,6 +126,7 @@ const ReviewerFormNCXDetails = () => {
   useEffect(() => {
     GetFormDetailsById();
     GetReasons();
+    GetAcountInfo()
   }, []);
   return (
     <>

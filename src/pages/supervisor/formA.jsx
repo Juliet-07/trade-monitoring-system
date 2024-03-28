@@ -35,7 +35,7 @@ const SupervisorFormA = () => {
   const numbersForProcessed = [...Array(npages + 1).keys()].slice(1);
 
   const GetPendingFormA = () => {
-    const url = `${baseURL}/v1/FormA/PendingFormAList`;
+    const url = `${baseURL}/Supervisor/ADBSupervisorPendingFormA`;
     let data;
     axios
       .get(url, {
@@ -46,8 +46,7 @@ const SupervisorFormA = () => {
       })
       .then((response) => {
         console.log(response.data, "Pending Form A");
-        data = response.data.responseResult.content;
-        setPendingFormA(data);
+        setPendingFormA(response.data);
       })
       .catch((err) => console.log(err));
   };
@@ -100,10 +99,6 @@ const SupervisorFormA = () => {
                 <td className="py-3">Application No.</td>
                 <td className="py-3">Form Number</td>
                 <td className="py-3">Applicant Name</td>
-                <td className="py-3">FoB Value($)</td>
-                <td className="py-3">NESS Levy (N)</td>
-                <td className="py-3">Last Modified</td>
-                <td className="py-3 text-yellow-600">Stage</td>
                 <td className="py-3">Date Created</td>
                 <td></td>
               </tr>
@@ -120,10 +115,6 @@ const SupervisorFormA = () => {
                   <td className="py-2">{a.applicationNumber}</td>
                   <td className="py-2">{a.formNumber}</td>
                   <td className="py-2">{a.applicantName}</td>
-                  <td className="py-2">$ {a.initialShipmentTotalDollarFoB}</td>
-                  <td className="py-2">N {a.initialShipmentNessLevyPayable}</td>
-                  <td className="py-2">{a.updatedAt}</td>
-                  <td className="py-2 text-yellow-600">{a.statusCode}</td>
                   <td className="py-2">{a.createdAt}</td>
                   <td className="flex items-center p-4">
                     <div className="group relative">
@@ -131,7 +122,7 @@ const SupervisorFormA = () => {
                         <FaEye
                           onClick={() => {
                             setSelectedRowData(a.id);
-                            navigate(`/supervisor/formADetails/${a.id}`);
+                            navigate(`/supervisor/formADetails/${a.formId}`);
                           }}
                         />
                       </span>

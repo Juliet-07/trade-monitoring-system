@@ -93,25 +93,17 @@ const ReviewerFormNxpDetails = () => {
 
   const sendApproval = () => {
     const url = `${baseURL}/Reviewer/ADBReviewerApproval`;
-    // const payload1 = {
-    //   recommendedForApproval: true,
-    //   note: "string",
-    //   rejectionReason: "string",
-    //   formTypeName: "string",
-    //   formID: "string",
-    //   applicationNumber: "string",
-    //   email: "string",
-    // };
     const payload = {
       recommendedForApproval: approval,
       note: note,
-      // daemonReviewerName: userName,
-      // supervisorName: "No Supervisor yet",
       rejectionReason: rejection ? rejectionReason.label : "Not Rejected",
       formTypeName: "Form NXP",
-      applicationNumber: formDetails.applicationNumber,
       formID: ID,
-      email: "sarah.omoike@premiumtrustbank.com",
+      applicationNumber: formDetails.applicationNumber,
+      supervisorEmail: "sarah.omoike@premiumtrustbank.com",
+      //customerNairaAccountNo: formDetails.accountNumber,
+      customerNairaAccountNo: "0070001060",
+      applicantName: formDetails?.contact?.name
     };
 
     console.log(payload);

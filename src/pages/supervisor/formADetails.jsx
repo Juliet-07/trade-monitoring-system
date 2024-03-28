@@ -45,32 +45,68 @@ const SupervisorFormADetails = () => {
     setRejectionReason(value);
     console.log(value, "selected reason");
   };
+  
+  const debitUser = () => {
+    const url = "http://192.168.207.18:4248/api/Funds/ChargesCollection";
+    const payload = {
+      formID: ID,
+      applicationNumber: formDetails?.applicationNumber,
+      formType: "Form A",
+    };
+  
+    console.log(payload);
+    
+    // Return a promise
+    return new Promise((resolve, reject) => {
+      axios.post(url, payload, {
+        headers: {
+          ApiKey: "E1A7F6B0EE30FDE1E0530FC9A8C05DA3E1A7F6B0EE31FDE1E0530FC9A8C05DA3A2F5BCE0531ECFA8C0532DF5EA644B5DA3F5BCE0531ECXzaMiYitfbK2oDjUJSU38RcXhExB7oycks/0/FnAzbB4u6SRMOPiaMM3on2wPor35agI7RRt0U4rckdzdiYDhXDL2LigoWkx97cGaOsqPN",
+          "Content-type": "application/json",
+        },
+      })
+      .then(resolve)  // Resolve with the response
+      .catch(reject); // Reject with the error
+    });
+  };
 
   const sendApproval = () => {
     const url = `${baseURL}/Supervisor/ADBSupervisorFormAApproval?applicationNumber=${formDetails?.applicationNumber}`;
     const payload = {
       approved: approval,
       note: note,
-      daemonReviewName: "Tolulope Buraimoh",
-      daemonSupervisorName: userName,
-      rejectionReasonCode: rejection ? rejectionReason.label : null,
+      formID: ID,
+      applicationNumber: formDetails?.applicationNumber,
+      rejectionReasonCode: rejection ? rejectionReason.label : "Not Rejected",
+      disbursmentSupervisorEmail: userName,
     };
 
     console.log(payload);
-    axios
-      .post(url, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-type": "application/json",
-        },
+
+    // Call debitUser function and chain the promise
+    debitUser()
+      .then((debitResponse) => {
+        console.log(debitResponse, "Debit response");
+        // Proceed with sendApproval if debit response is successful
+        alert(`Debit Response: ${debitResponse.data.message}`)
+        return axios.post(url, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json",
+          },
+        });
       })
-      .then((response) => {
-        console.log(response, "response from approval");
-        alert(response.data.responseResult);
-        if (response.status === 200) {
+      .then((approvalResponse) => {
+        console.log(approvalResponse, "response from approval");
+        alert(approvalResponse.data.responseMessage);
+        if (approvalResponse.status === 200) {
           // Close the modal upon successful registration
           setModal(false);
         }
+      })
+      .catch((error) => {
+        // Handle errors for both debitUser and sendApproval functions
+        console.error("Error:", error);
+        // Additional error handling if needed
       });
   };
   useEffect(() => {

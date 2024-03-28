@@ -36,7 +36,7 @@ const SupervisorFormNCX = () => {
   const numbersForProcessed = [...Array(npages + 1).keys()].slice(1);
 
   const GetPendingFormNCX = () => {
-    const url = `${baseURL}/NCX/GetPendingFormNCX`;
+    const url = `${baseURL}/Supervisor/ADBSupervisorPendingFormNCX`;
     let data;
     axios
       .get(url, {
@@ -47,8 +47,7 @@ const SupervisorFormNCX = () => {
       })
       .then((response) => {
         console.log(response.data, "Pending NCX");
-        data = response.data.responseResult.content;
-        setPendingNCX(data);
+        setPendingNCX(response.data);
       })
       .catch((err) => console.log(err));
   };
@@ -101,9 +100,9 @@ const SupervisorFormNCX = () => {
                 <td className="py-3">Application No.</td>
                 <td className="py-3">Form Number</td>
                 <td className="py-3">Applicant Name</td>
-                <td className="py-3">Branch</td>
+                {/* <td className="py-3">Branch</td>
                 <td className="py-3">Last Modified</td>
-                <td className="py-3 text-yellow-600">Stage</td>
+                <td className="py-3 text-yellow-600">Stage</td> */}
                 <td className="py-3">Date Created</td>
                 <td></td>
               </tr>
@@ -120,9 +119,9 @@ const SupervisorFormNCX = () => {
                   <td className="py-2">{ncx.applicationNumber}</td>
                   <td className="py-2">{ncx.formNumber}</td>
                   <td className="py-2">{ncx.applicantName}</td>
-                  <td className="py-2">{ncx.processingBankBranchName}</td>
+                  {/* <td className="py-2">{ncx.processingBankBranchName}</td>
                   <td className="py-2">{ncx.updatedAt}</td>
-                  <td className="py-2 text-yellow-600">{ncx.statusCode}</td>
+                  <td className="py-2 text-yellow-600">{ncx.statusCode}</td> */}
                   <td className="py-2">{ncx.createdAt}</td>
                   <td className="flex items-center p-4">
                     <div className="group relative">
@@ -130,7 +129,7 @@ const SupervisorFormNCX = () => {
                         <FaEye
                           onClick={() => {
                             setSelectedRowData(ncx.id);
-                            navigate(`/supervisor/formNcxDetails/${ncx.id}`);
+                            navigate(`/supervisor/formNcxDetails/${ncx.formId}`);
                           }}
                         />
                       </span>
