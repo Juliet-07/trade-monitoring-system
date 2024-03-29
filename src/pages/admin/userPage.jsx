@@ -87,7 +87,7 @@ const UserPage = () => {
       .catch((err) => console.log(err));
   };
 
-  const deactivateUser = () => {
+  const toggleUserStatus = () => {
     const payload = {
       id: user.id,
       firstName: user.firstName,
@@ -96,7 +96,7 @@ const UserPage = () => {
       email: user.email,
       userID: user.userID,
       branch: user.branch,
-      isActive: false,
+      isActive: !user.isActive, // Toggle the status
       role: user.role,
     };
     const url = `${baseURL}/RegisterUser/UpdateUser`;
@@ -110,9 +110,14 @@ const UserPage = () => {
       .then((response) => {
         console.log(response.data);
         alert(response.data.message);
+        // Update the user state after successful update
+        setUser((prevUser) => ({
+          ...prevUser,
+          isActive: !prevUser.isActive,
+        }));
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   return (
     <>
@@ -213,16 +218,27 @@ const UserPage = () => {
             </div>
             <div className="w-full flex items-center justify-between my-6">
               <div
-                className="w-[172px] h-[48px] flex items-center justify-center rounded text-white bg-[#9B9CA0] cursor-pointer"
-                onClick={() => deactivateUser()}
+                className={`w-[172px] h-[48px] flex items-center justify-center rounded text-white ${
+                  user.isActive ? 'bg-[#9B9CA0]' : 'bg-[#00A45A]'
+                } cursor-pointer`}
+                onClick={() => toggleUserStatus()}
               >
-                Deactivate
+                {user.isActive ? 'Deactivate' : 'Activate'}
               </div>
-              <div
+              {/* <div
                 className="w-[172px] h-[48px] flex items-center justify-center rounded text-white bg-[#DB1600] cursor-pointer"
                 onClick={() => updateUser()}
               >
                 Update
+              </div> */}
+              <div
+                className={`w-[172px] h-[48px] flex items-center justify-center rounded text-white ${
+                user.isActive ? 'bg-[#DB1600]' : 'bg-gray-400 cursor-not-allowed'
+                }`}
+                onClick={() => updateUser()}
+                  disabled={!user.isActive}
+                >
+                  Update
               </div>
             </div>
           </form>

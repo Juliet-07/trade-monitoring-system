@@ -52,6 +52,7 @@ const SupervisorFormADetails = () => {
       formID: ID,
       applicationNumber: formDetails?.applicationNumber,
       formType: "Form A",
+      createdBy: userName
     };
   
     console.log(payload);

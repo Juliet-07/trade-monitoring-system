@@ -124,6 +124,23 @@ const ReviewerFormNxpDetails = () => {
       });
   };
 
+  const downloadFile = () => {
+    const url = `${baseURL}/Files/DownloadFile?fileID=${`fileID`}`;
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        
+       
+      })
+      .catch((err) => console.log(err));
+  };
+ 
   useEffect(() => {
     GetFormDetailsById();
     GetReasons();

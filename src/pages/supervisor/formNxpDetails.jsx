@@ -42,6 +42,7 @@ const SupervisorFormNxpDetails = () => {
       formID: ID,
       applicationNumber: formDetails?.applicationNumber,
       formType: "Form NXP",
+      createdBy: userName
     };
   
     console.log(payload);

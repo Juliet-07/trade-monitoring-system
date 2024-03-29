@@ -78,6 +78,7 @@ const SupervisorFormNCXDetails = () => {
       formID: ID,
       applicationNumber: formDetails?.applicationNumber,
       formType: "Form NCX",
+      createdBy: userName
     };
   
     console.log(payload);
