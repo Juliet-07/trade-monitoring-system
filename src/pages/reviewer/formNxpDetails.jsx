@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { TbArrowBackUp } from "react-icons/tb";
 import { FaFileCode, FaDownload } from "react-icons/fa6";
@@ -9,6 +9,7 @@ import Select from "react-select";
 import { data } from "autoprefixer";
 
 const ReviewerFormNxpDetails = () => {
+  const navigate = useNavigate()
   const { id: ID } = useParams();
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
@@ -121,6 +122,7 @@ const ReviewerFormNxpDetails = () => {
           // Close the modal upon successful registration
           setModal(false);
         }
+        navigate("/reviewer/formNxp")
       });
   };
 

@@ -110,6 +110,7 @@ const SupervisorFormADetails = () => {
         // Additional error handling if needed
       });
   };
+  
   useEffect(() => {
     GetFormDetailsById();
   }, []);
@@ -246,7 +247,7 @@ const SupervisorFormADetails = () => {
                   <span className="text-gray-600 text-xs">
                     Naira Account Number:
                   </span>{" "}
-                  {formDetails?.accountNumber}
+                  {formDetails?.processingFeeAccountNumber}
                 </p>
               </div>
             </div>

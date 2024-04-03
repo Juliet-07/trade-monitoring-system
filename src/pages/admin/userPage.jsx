@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link,useNavigate } from "react-router-dom";
 import Navbar from "./navbar";
 import { TbArrowBackUp } from "react-icons/tb";
 
 const UserPage = () => {
+  const navigate = useNavigate()
   const { id: userID } = useParams();
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
@@ -110,6 +111,7 @@ const UserPage = () => {
       .then((response) => {
         console.log(response.data);
         alert(response.data.message);
+        navigate("/admin")
         // Update the user state after successful update
         setUser((prevUser) => ({
           ...prevUser,

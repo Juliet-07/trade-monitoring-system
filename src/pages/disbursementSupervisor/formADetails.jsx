@@ -444,38 +444,6 @@ const DBS_SupervisorFormADetails = () => {
         <Modal isVisible={modal} onClose={() => setModal(false)}>
           <div className="font-mono w-[500px]">
             <form className="w-full flex flex-col items-center justify-center">
-              {/* <div className="w-full">
-                <p className="font-semibold my-2 text-green-500">
-                  Reviewer Action
-                </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <p className="font-semibold">
-                    Actor:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                  <p className="font-semibold">
-                    Action:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                  <p className="font-semibold">
-                    Note:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                  <p className="font-semibold">
-                    Date:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                </div>
-              </div> */}
-
               <div className="w-full">
                 <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
                 <div className="mt-4">
@@ -567,13 +535,6 @@ const DBS_SupervisorFormADetails = () => {
                   />
                 </div>
                 <div className="mt-4 flex items-center justify-between">
-                  {/* <label
-                    htmlFor="details"
-                    className="text-[#2b2e35] font-semibold mb-2"
-                  >
-                    Upload Document
-                  </label> */}
-
                   <input type="file" name="file" onChange={fileUploadHandler} />
                   <button onClick={(e) => uploadFile(e)}>Generate ID</button>
                 </div>
@@ -627,14 +588,6 @@ const DBS_SupervisorFormADetails = () => {
                       onInputChange={handleReasonsInputChange}
                       isSearchable
                     />
-                    // <select
-                    //   className="w-[350px] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border mt-2"
-                    //   value={rejectionReason}
-                    //   onChange={(e) => setRejectionReason(e.target.value)}
-                    // >
-                    //   <option value="">Select rejection reason</option>
-
-                    // </select>
                   )}
                 </div>
                 <div className="w-full">
