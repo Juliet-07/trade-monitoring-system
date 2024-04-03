@@ -8,21 +8,11 @@ import Header from "../../components/Header";
 
 const Layout = ({ children }) => {
   const Menus = [
-    // {
-    //   title: "Form NXP",
-    //   icon: <TfiAgenda />,
-    //   path: "/supervisor/formNxp",
-    // },
     {
       title: "Form A",
       icon: <SiFormstack />,
       path: "/dbs_supervisor/formA",
     },
-    // {
-    //   title: "Form NCX",
-    //   icon: <LuNetwork />,
-    //   path: "/supervisor/formNcx",
-    // },
   ];
   const activeLink =
     "mx-4 flex justify-start items-center text-white text-2xl space-x-1 font-bold bg-black rounded-xl";

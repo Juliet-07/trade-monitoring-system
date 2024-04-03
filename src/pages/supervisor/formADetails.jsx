@@ -21,6 +21,7 @@ const SupervisorFormADetails = () => {
   const [reasons, setReasons] = useState([]);
   const [rejectionReason, setRejectionReason] = useState("");
   const [inputValue, setValue] = useState("");
+  const [stage, setStage] = useState("");
 
   const GetFormDetailsById = () => {
     const url = `${baseURL}/v1/FormA/FormAPendingDetails?formID=${ID}`;
@@ -34,6 +35,7 @@ const SupervisorFormADetails = () => {
       .then((response) => {
         console.log(response.data.responseResult);
         setFormDetails(response.data.responseResult);
+        setStage(response.data.responseResult?.statusCode);
       })
       .catch((err) => console.log(err));
   };
@@ -113,10 +115,278 @@ const SupervisorFormADetails = () => {
       });
   };
 
+  const sendDBSApproval = () => {
+    const url = `${baseURL}/DisbursementSupervisor/DisbursementSupervisorApproval?applicationNumber=${formDetails?.applicationNumber}?formId=${ID}`;
+
+    // const beneficiariesWithDisbursements = formDetails?.beneficiaries?.map(
+    //   (beneficiary) => ({
+    //     id: beneficiary?.id,
+    //     disbursements:
+    //       beneficiary?.disbursements?.map((disburse) => ({
+    //         id: null,
+    //         bvn: beneficiary?.bvn,
+    //         amount: beneficiary?.amountRequested,
+    //         exchangeRate: formDetails?.currency?.sellRate,
+    //         transactionCode: "042082",
+    //         paymentModeCode: "007",
+    //         dateDisbursed: "2024-01-03",
+    //         transactionCodeFileId: "ccc8ee86-d31b-4f9f-b6db-185ef55464d7",
+    //       })) || [],
+    //   })
+    // );
+
+    const disbursedAmountInt = parseInt(disbursedAmount);
+
+    const beneficiariesWithDisbursements = formDetails?.beneficiaries?.map(
+      (beneficiary) => ({
+        id: beneficiary?.id,
+        disbursements: [
+          {
+            id: null,
+            bvn: beneficiary?.bvn,
+            amount: disbursedAmountInt,
+            // amount: beneficiary?.amountRequested,
+            // exchangeRate: beneficiary?.currency?.sellRate.toString(),
+            // exchangeRate: "10",
+            exhangeRate: exchangeRate,
+            // transactionCode: "042082",
+            transactionCode: transactionCode,
+            // paymentModeCode: "007",
+            paymentModeCode: paymentModeCode,
+            // dateDisbursed: "2024-01-03",
+            dateDisbursed: dateDisbursed,
+            transactionCodeFileId: fileID,
+          },
+        ],
+      })
+    );
+
+    const payload = {
+      approved: "true",
+      note: note,
+      daemonReviewName: "Adejinmi Olusoji",
+      daemonSupervisorName: userName,
+      beneficiaries: beneficiariesWithDisbursements,
+      disbursementsCloseOut: true,
+      rejectionStakeholder: rejection ? rejectionReason.label : null,
+    };
+
+    console.log(payload);
+    axios
+      .post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response, "response from approval");
+        alert(response.data.responseMessage);
+        if (response.status === 200) {
+          // Close the modal upon successful registration
+          setModal(false);
+        }
+      });
+  };
+
   useEffect(() => {
     GetFormDetailsById();
   }, []);
 
+  // Conditionally render different modal content based on the stage
+  const renderModalContent = () => {
+    if (stage === "ADB_DISBURSEMENT_SUERVISOR") {
+      return (
+        <div className="font-mono w-[500px] overflow-scroll">
+          <form className="w-full flex flex-col items-center justify-center">
+            <div className="w-full">
+              <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
+              <div className="mt-4">
+                {formDetails?.beneficiaries?.map((beneficiary) => (
+                  <label
+                    htmlFor="details"
+                    className="text-[#2b2e35] font-semibold mb-2"
+                  >
+                    <span>Requested Amount:</span>
+                    <span>{beneficiary.amountRequested}</span>
+                  </label>
+                ))}
+              </div>
+
+              <div className="w-full flex items-center mb-4">
+                <input
+                  id="approval-radio"
+                  type="radio"
+                  checked={approval}
+                  onChange={() => {
+                    setApproval(!approval);
+                    if (rejection) {
+                      setRejection(false);
+                    }
+                  }}
+                  className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
+                />
+                <label
+                  htmlFor="approval-radio"
+                  className="ml-2 font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Accept Reviewer Action
+                </label>
+              </div>
+              <div className="w-full flex flex-col mb-4">
+                <div className="flex items-center">
+                  <input
+                    id="rejection-checkbox"
+                    type="radio"
+                    checked={rejection}
+                    onChange={() => {
+                      setRejection(!rejection);
+                      if (approval) {
+                        setApproval(false);
+                      }
+                    }}
+                    className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="rejection-checkbox"
+                    className="ml-2 font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Request Reviewer Modification
+                  </label>
+                </div>
+              </div>
+              <div className="w-full">
+                <textarea
+                  id="message"
+                  rows="4"
+                  className=" p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border"
+                  placeholder="Write notes for approval or rejection"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                ></textarea>
+              </div>
+            </div>
+            <div
+              className="bg-yellow-600 w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer font-semibold m-4"
+              onClick={() => sendDBSApproval()}
+            >
+              Submit
+            </div>
+          </form>
+        </div>
+      );
+    } else {
+      return (
+        <div className="font-mono w-[500px]">
+          <form className="w-full flex flex-col items-center justify-center">
+            <div className="w-full">
+              <p className="font-semibold my-2 text-green-500">
+                Reviewer Action
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <p className="font-semibold">
+                  Actor:
+                  <span className="text-gray-600">
+                    {formDetails?.applicationNumber}
+                  </span>
+                </p>
+                <p className="font-semibold">
+                  Action:
+                  <span className="text-gray-600">
+                    {formDetails?.applicationNumber}
+                  </span>
+                </p>
+                <p className="font-semibold">
+                  Note:
+                  <span className="text-gray-600">
+                    {formDetails?.applicationNumber}
+                  </span>
+                </p>
+                <p className="font-semibold">
+                  Date:
+                  <span className="text-gray-600">
+                    {formDetails?.applicationNumber}
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div className="w-full">
+              <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
+              <div className="w-full flex items-center mb-4">
+                <input
+                  id="approval-radio"
+                  type="radio"
+                  checked={approval}
+                  onChange={() => {
+                    setApproval(!approval);
+                    if (rejection) {
+                      setRejection(false);
+                    }
+                  }}
+                  className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
+                />
+                <label
+                  htmlFor="approval-radio"
+                  className="ml-2 font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Accept Reviewer Action
+                </label>
+              </div>
+              <div className="w-full flex flex-col mb-4">
+                <div className="flex items-center">
+                  <input
+                    id="rejection-checkbox"
+                    type="radio"
+                    checked={rejection}
+                    onChange={() => {
+                      setRejection(!rejection);
+                      if (approval) {
+                        setApproval(false);
+                      }
+                    }}
+                    className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
+                  />
+                  <label
+                    htmlFor="rejection-checkbox"
+                    className="ml-2 font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Request Reviewer Modification
+                  </label>
+                </div>
+
+                {rejection && (
+                  <Select
+                    options={reasons}
+                    defaultValue={rejectionReason}
+                    onChange={handleSelectReasonsChange}
+                    onInputChange={handleReasonsInputChange}
+                    isSearchable
+                  />
+                )}
+              </div>
+              <div className="w-full">
+                <textarea
+                  id="message"
+                  rows="4"
+                  className=" p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border"
+                  placeholder="Write notes for approval or rejection"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                ></textarea>
+              </div>
+            </div>
+
+            <div
+              className="bg-yellow-600 w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer font-semibold m-4"
+              onClick={() => sendApproval()}
+            >
+              Submit
+            </div>
+          </form>
+        </div>
+      );
+    }
+  };
   return (
     <>
       <Header />
@@ -393,121 +663,7 @@ const SupervisorFormADetails = () => {
           ))}
         </div>
         <Modal isVisible={modal} onClose={() => setModal(false)}>
-          <div className="font-mono w-[500px]">
-            <form className="w-full flex flex-col items-center justify-center">
-              <div className="w-full">
-                <p className="font-semibold my-2 text-green-500">
-                  Reviewer Action
-                </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <p className="font-semibold">
-                    Actor:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                  <p className="font-semibold">
-                    Action:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                  <p className="font-semibold">
-                    Note:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                  <p className="font-semibold">
-                    Date:
-                    <span className="text-gray-600">
-                      {formDetails?.applicationNumber}
-                    </span>
-                  </p>
-                </div>
-              </div>
-              <div className="w-full">
-                <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
-                <div className="w-full flex items-center mb-4">
-                  <input
-                    id="approval-radio"
-                    type="radio"
-                    checked={approval}
-                    onChange={() => {
-                      setApproval(!approval);
-                      if (rejection) {
-                        setRejection(false);
-                      }
-                    }}
-                    className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
-                  />
-                  <label
-                    htmlFor="approval-radio"
-                    className="ml-2 font-medium text-gray-900 dark:text-gray-300"
-                  >
-                    Accept Reviewer Action
-                  </label>
-                </div>
-                <div className="w-full flex flex-col mb-4">
-                  <div className="flex items-center">
-                    <input
-                      id="rejection-checkbox"
-                      type="radio"
-                      checked={rejection}
-                      onChange={() => {
-                        setRejection(!rejection);
-                        if (approval) {
-                          setApproval(false);
-                        }
-                      }}
-                      className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
-                    />
-                    <label
-                      htmlFor="rejection-checkbox"
-                      className="ml-2 font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Request Reviewer Modification
-                    </label>
-                  </div>
-
-                  {rejection && (
-                    <Select
-                      options={reasons}
-                      defaultValue={rejectionReason}
-                      onChange={handleSelectReasonsChange}
-                      onInputChange={handleReasonsInputChange}
-                      isSearchable
-                    />
-                    // <select
-                    //   className="w-[350px] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border mt-2"
-                    //   value={rejectionReason}
-                    //   onChange={(e) => setRejectionReason(e.target.value)}
-                    // >
-                    //   <option value="">Select rejection reason</option>
-
-                    // </select>
-                  )}
-                </div>
-                <div className="w-full">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    className=" p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border"
-                    placeholder="Write notes for approval or rejection"
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                  ></textarea>
-                </div>
-              </div>
-
-              <div
-                className="bg-yellow-600 w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer font-semibold m-4"
-                onClick={() => sendApproval()}
-              >
-                Submit
-              </div>
-            </form>
-          </div>
+          {renderModalContent()}
         </Modal>
       </div>
     </>

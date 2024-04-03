@@ -87,7 +87,7 @@ const DBS_SupervisorFormADetails = () => {
   };
 
   const sendApproval = () => {
-    const url = `${baseURL}/DisbursmentSupervisor/DisbursmentSupervisorApproval?applicationNumber=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/DisbursementSupervisor/DisbursementSupervisorApproval?applicationNumber=${formDetails?.applicationNumber}?formId=${ID}`;
 
     // const beneficiariesWithDisbursements = formDetails?.beneficiaries?.map(
     //   (beneficiary) => ({
@@ -442,7 +442,7 @@ const DBS_SupervisorFormADetails = () => {
           </div>
         </div>
         <Modal isVisible={modal} onClose={() => setModal(false)}>
-          <div className="font-mono w-[500px]">
+          <div className="font-mono w-[500px] overflow-scroll">
             <form className="w-full flex flex-col items-center justify-center">
               <div className="w-full">
                 <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
@@ -456,88 +456,8 @@ const DBS_SupervisorFormADetails = () => {
                       <span>{beneficiary.amountRequested}</span>
                     </label>
                   ))}
+                </div>
 
-                  <input
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="disbursedAmount"
-                    placeholder="Disbursement Amount"
-                    value={disbursedAmount}
-                    onChange={(e) => setDisbursedAmount(e.target.value)}
-                    // required
-                  />
-                </div>
-                <div className="mt-4">
-                  <label
-                    htmlFor="details"
-                    className="text-[#2b2e35] font-semibold mb-2"
-                  >
-                    Exchange Rate
-                  </label>
-
-                  <input
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="exchangeRate"
-                    placeholder="Disbursement Amount"
-                    value={exchangeRate}
-                    onChange={(e) => setExchangeRate(e.target.value)}
-                    // required
-                  />
-                </div>
-                <div className="mt-4">
-                  <label
-                    htmlFor="details"
-                    className="text-[#2b2e35] font-semibold mb-2"
-                  >
-                    Transaction Code
-                  </label>
-
-                  <input
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="exchangeRate"
-                    placeholder="Disbursement Amount"
-                    value={transactionCode}
-                    onChange={(e) => setTransactionCode(e.target.value)}
-                    // required
-                  />
-                </div>
-                <div className="mt-4">
-                  <label
-                    htmlFor="details"
-                    className="text-[#2b2e35] font-semibold mb-2"
-                  >
-                    Payment Mode
-                  </label>
-
-                  <input
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="exchangeRate"
-                    placeholder="Disbursement Amount"
-                    value={paymentModeCode}
-                    onChange={(e) => setPaymentModeCode(e.target.value)}
-                    // required
-                  />
-                </div>
-                <div className="mt-4">
-                  <label
-                    htmlFor="details"
-                    className="text-[#2b2e35] font-semibold mb-2"
-                  >
-                    Date Disbursed
-                  </label>
-
-                  <input
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="exchangeRate"
-                    placeholder="Disbursement Amount"
-                    value={dateDisbursed}
-                    onChange={(e) => setDateDisbursed(e.target.value)}
-                    // required
-                  />
-                </div>
-                <div className="mt-4 flex items-center justify-between">
-                  <input type="file" name="file" onChange={fileUploadHandler} />
-                  <button onClick={(e) => uploadFile(e)}>Generate ID</button>
-                </div>
                 <div className="w-full flex items-center mb-4">
                   <input
                     id="approval-radio"
@@ -579,16 +499,6 @@ const DBS_SupervisorFormADetails = () => {
                       Request Reviewer Modification
                     </label>
                   </div>
-
-                  {rejection && (
-                    <Select
-                      options={reasons}
-                      defaultValue={rejectionReason}
-                      onChange={handleSelectReasonsChange}
-                      onInputChange={handleReasonsInputChange}
-                      isSearchable
-                    />
-                  )}
                 </div>
                 <div className="w-full">
                   <textarea
@@ -601,7 +511,6 @@ const DBS_SupervisorFormADetails = () => {
                   ></textarea>
                 </div>
               </div>
-
               <div
                 className="bg-yellow-600 w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer font-semibold m-4"
                 onClick={() => sendApproval()}

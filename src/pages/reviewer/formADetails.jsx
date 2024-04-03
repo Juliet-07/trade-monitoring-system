@@ -800,27 +800,29 @@ const ReviewerFormADetails = () => {
               </div>
             </div>
           </div>
-          {/* <div className="py-3 font-semibold">Workflow Notes</div>
-          {formDetails?.workflowNotes?.map((note) => (
-            <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
-              <p>
-                <span className="text-gray-600 text-xs">Actor:</span>{" "}
-                {note?.applicationStatusCode}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Action:</span>{" "}
-                {note?.name}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Note:</span>{" "}
-                {note?.noteDescription}
-              </p>
-              <p>
-                <span className="text-gray-600 text-xs">Date Created:</span>{" "}
-                {note?.createdAt}
-              </p>
-            </div>
-          ))} */}
+          <div className="py-3 font-semibold">Workflow Notes</div>
+          <div className="w-full grid grid-cols-3">
+            {formDetails?.workflowNotes?.map((note) => (
+              <div className="w-[405px] bg-white rounded-lg border shadow-lg p-4 grid gap-4">
+                <p>
+                  <span className="text-gray-600 text-xs">Actor:</span>{" "}
+                  {note?.applicationStatusCode}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Action:</span>{" "}
+                  {note?.name}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Note:</span>{" "}
+                  {note?.noteDescription}
+                </p>
+                <p>
+                  <span className="text-gray-600 text-xs">Date Created:</span>{" "}
+                  {note?.createdAt}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
         <Modal isVisible={modal} onClose={() => setModal(false)}>
           {renderModalContent()}

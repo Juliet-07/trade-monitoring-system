@@ -8,12 +8,12 @@ import Select from "react-select";
 import Modal from "../../components/Modal";
 
 const ReviewerFormNCXDetails = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { id: ID } = useParams();
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
-  const userName = userInfo.userName
+  const userName = userInfo.userName;
   const [formDetails, setFormDetails] = useState({});
   const [modal, setModal] = useState(false);
   const [approval, setApproval] = useState(false);
@@ -22,6 +22,7 @@ const ReviewerFormNCXDetails = () => {
   const [reasons, setReasons] = useState([]);
   const [rejectionReason, setRejectionReason] = useState("");
   const [inputValue, setValue] = useState("");
+  const [accountInfo, setAccountInfo] = useState({});
 
   const GetFormDetailsById = () => {
     const url = `${baseURL}/NCX/NCXFormDeatails?NcxForm_ID=${ID}`;
@@ -86,7 +87,7 @@ const ReviewerFormNCXDetails = () => {
       })
       .then((response) => {
         console.log(response, "account inquiry");
-        alert(`Account Inquiry: ${(response.data.message)}`);
+        setAccountInfo(response.data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -103,7 +104,7 @@ const ReviewerFormNCXDetails = () => {
       supervisorEmail: "sarah.omoike@premiumtrustbank.com",
       //customerNairaAccountNo: formDetails.accountNumber,
       customerNairaAccountNo: "0070001060",
-      applicantName: formDetails?.contact?.firstName
+      applicantName: formDetails?.contact?.firstName,
     };
 
     console.log(payload);
@@ -121,14 +122,14 @@ const ReviewerFormNCXDetails = () => {
           // Close the modal upon successful registration
           setModal(false);
         }
-        navigate("/reviewer/formNcx")
+        navigate("/reviewer/formNcx");
       });
   };
 
   useEffect(() => {
     GetFormDetailsById();
     GetReasons();
-    GetAcountInfo()
+    GetAcountInfo();
   }, []);
   return (
     <>
@@ -279,6 +280,30 @@ const ReviewerFormNCXDetails = () => {
                     Estimated Value of Goods (Dollars):
                   </span>{" "}
                   $ {formDetails?.estimatedValueOfGoodsDollar}
+                </p>
+              </div>
+            </div>
+            {/* Account Inquiry */}
+            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+              <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
+                Account Inquiry
+              </div>
+              <div className="px-4 py-2 grid gap-4 text-sm">
+                <p>
+                  <span className="text-gray-600">Account Name:</span>{" "}
+                  {accountInfo?.customerName}
+                </p>
+                <p>
+                  <span className="text-gray-600">Account Class:</span>{" "}
+                  {accountInfo?.accountClassDescription}
+                </p>
+                <p>
+                  <span className="text-gray-600">BVN Number:</span>{" "}
+                  {accountInfo?.bvnNumber}
+                </p>
+                <p>
+                  <span className="text-gray-600">Available Balance:</span>{" "}
+                  {accountInfo?.availableBalance}
                 </p>
               </div>
             </div>

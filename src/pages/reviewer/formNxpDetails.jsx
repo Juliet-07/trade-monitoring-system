@@ -23,6 +23,7 @@ const ReviewerFormNxpDetails = () => {
   const [reason, setReason] = useState([]);
   const [rejectionReason, setRejectionReason] = useState("");
   const [inputValue, setValue] = useState("");
+  const [accountInfo, setAccountInfo] = useState({});
 
   const GetFormDetailsById = () => {
     const url = `${baseURL}/NXP/FormnxpDetails?formID=${ID}`;
@@ -87,7 +88,7 @@ const ReviewerFormNxpDetails = () => {
       })
       .then((response) => {
         console.log(response, "account inquiry");
-        alert(`Account Inquiry: ${response.data.message}`);
+        setAccountInfo(response.data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -335,6 +336,30 @@ const ReviewerFormNxpDetails = () => {
                 <p>
                   <span className="text-gray-600 text-xs">Payment Mode:</span>{" "}
                   {formDetails?.paymentMode?.name}
+                </p>
+              </div>
+            </div>
+            {/* Account Inquiry */}
+            <div className="w-[405px] h-[281px] rounded-lg bg-white border border-[#D1FADF] shadow-lg">
+              <div className="w-full h-[52px] bg-[#039855] text-white rounded-t-lg p-4 font-semibold">
+                Account Inquiry
+              </div>
+              <div className="px-4 py-2 grid gap-4 text-sm">
+                <p>
+                  <span className="text-gray-600">Account Name:</span>{" "}
+                  {accountInfo?.customerName}
+                </p>
+                <p>
+                  <span className="text-gray-600">Account Class:</span>{" "}
+                  {accountInfo?.accountClassDescription}
+                </p>
+                <p>
+                  <span className="text-gray-600">BVN Number:</span>{" "}
+                  {accountInfo?.bvnNumber}
+                </p>
+                <p>
+                  <span className="text-gray-600">Available Balance:</span>{" "}
+                  {accountInfo?.availableBalance}
                 </p>
               </div>
             </div>
