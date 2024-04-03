@@ -9,7 +9,7 @@ import Select from "react-select";
 import { data } from "autoprefixer";
 
 const ReviewerFormNxpDetails = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { id: ID } = useParams();
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
@@ -87,7 +87,7 @@ const ReviewerFormNxpDetails = () => {
       })
       .then((response) => {
         console.log(response, "account inquiry");
-        alert(`Account Inquiry: ${(response.data.message)}`);
+        alert(`Account Inquiry: ${response.data.message}`);
       })
       .catch((err) => console.log(err));
   };
@@ -104,7 +104,7 @@ const ReviewerFormNxpDetails = () => {
       supervisorEmail: "sarah.omoike@premiumtrustbank.com",
       //customerNairaAccountNo: formDetails.accountNumber,
       customerNairaAccountNo: "0070001060",
-      applicantName: formDetails?.contact?.name
+      applicantName: formDetails?.contact?.name,
     };
 
     console.log(payload);
@@ -122,7 +122,7 @@ const ReviewerFormNxpDetails = () => {
           // Close the modal upon successful registration
           setModal(false);
         }
-        navigate("/reviewer/formNxp")
+        navigate("/reviewer/formNxp");
       });
   };
 
@@ -137,12 +137,10 @@ const ReviewerFormNxpDetails = () => {
       })
       .then((response) => {
         console.log(response.data);
-        
-       
       })
       .catch((err) => console.log(err));
   };
- 
+
   useEffect(() => {
     GetFormDetailsById();
     GetReasons();

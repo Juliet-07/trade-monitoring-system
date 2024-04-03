@@ -8,7 +8,7 @@ import Modal from "../../components/Modal";
 import Select from "react-select";
 
 const ReviewerFormADetails = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { id: ID } = useParams();
   //   console.log(userID, "id");
   const baseURL = import.meta.env.VITE_REACT_APP_BASEURL;
@@ -23,8 +23,8 @@ const ReviewerFormADetails = () => {
   const [reasons, setReasons] = useState([]);
   const [rejectionReason, setRejectionReason] = useState("");
   const [inputValue, setValue] = useState("");
-  const [accountInfo, setAccountInfo] = useState({})
-  const [stage, setStage] = useState("")
+  const [accountInfo, setAccountInfo] = useState({});
+  const [stage, setStage] = useState("");
   const [disbursedAmount, setDisbursedAmount] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(0);
   const [transactionCode, setTransactionCode] = useState("");
@@ -47,12 +47,11 @@ const ReviewerFormADetails = () => {
       .then((response) => {
         console.log(response.data.responseResult);
         setFormDetails(response.data.responseResult);
-        setStage(response.data.responseResult?.statusCode)
+        setStage(response.data.responseResult?.statusCode);
       })
       .catch((err) => console.log(err));
   };
 
-  
   const GetReasons = () => {
     let details;
     let reasons;
@@ -100,7 +99,7 @@ const ReviewerFormADetails = () => {
       })
       .then((response) => {
         console.log(response, "account inquiry");
-        setAccountInfo(response.data.data)
+        setAccountInfo(response.data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -117,9 +116,8 @@ const ReviewerFormADetails = () => {
       supervisorEmail: "sarah.omoike@premiumtrustbank.com",
       //customerNairaAccountNo: formDetails.accountNumber,
       customerNairaAccountNo: "0070001060",
-      applicantName: formDetails?.applicantName
+      applicantName: formDetails?.applicantName,
     };
-
 
     console.log(payload);
     axios
@@ -136,7 +134,7 @@ const ReviewerFormADetails = () => {
           // Close the modal upon successful registration
           setModal(false);
         }
-        navigate("/reviewer/formA")
+        navigate("/reviewer/formA");
       });
   };
 
@@ -192,7 +190,6 @@ const ReviewerFormADetails = () => {
       disbursementCloseout: disbursementCloseout,
     };
 
-
     console.log(payload);
     axios
       .post(url, payload, {
@@ -208,14 +205,14 @@ const ReviewerFormADetails = () => {
           // Close the modal upon successful registration
           setModal(false);
         }
-        navigate("/reviewer/formA")
+        navigate("/reviewer/formA");
       });
   };
 
   useEffect(() => {
     GetFormDetailsById();
     GetReasons();
-    GetAcountInfo()
+    GetAcountInfo();
   }, []);
 
   // Conditionally render different modal content based on the stage
@@ -223,310 +220,310 @@ const ReviewerFormADetails = () => {
     if (stage === "ADB_DISBURSEMENT_REVIEWER") {
       return (
         <div className="font-mono w-[500px] overflow-scroll">
-            <form className="w-full flex flex-col items-center justify-center">
-              <div className="w-full">
-                <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
-                <div className="mt-4">
-                  {formDetails?.beneficiaries?.map((beneficiary) => (
-                    <label
-                      htmlFor="details"
-                      className="text-[#2b2e35] font-semibold mb-2"
-                    >
-                      <span>Requested Amount:</span>
-                      <span>{beneficiary.amountRequested}</span>
-                    </label>
-                  ))}
-
-                  <input
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="disbursedAmount"
-                    placeholder="Disbursement Amount"
-                    value={disbursedAmount}
-                    onChange={(e) => setDisbursedAmount(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mt-4">
+          <form className="w-full flex flex-col items-center justify-center">
+            <div className="w-full">
+              <p className="font-semibold my-2 mt-4 text-red-700"> Action</p>
+              <div className="mt-4">
+                {formDetails?.beneficiaries?.map((beneficiary) => (
                   <label
                     htmlFor="details"
                     className="text-[#2b2e35] font-semibold mb-2"
                   >
-                    Exchange Rate
+                    <span>Requested Amount:</span>
+                    <span>{beneficiary.amountRequested}</span>
                   </label>
+                ))}
 
-                  <input
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="exchangeRate"
-                    placeholder="Disbursement Amount"
-                    value={exchangeRate}
-                    onChange={(e) => setExchangeRate(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mt-4">
-                  <label
-                    htmlFor="details"
-                    className="text-[#2b2e35] font-semibold mb-2"
-                  >
-                    Transaction Code
-                  </label>
+                <input
+                  className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                  name="disbursedAmount"
+                  placeholder="Disbursement Amount"
+                  value={disbursedAmount}
+                  onChange={(e) => setDisbursedAmount(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mt-4">
+                <label
+                  htmlFor="details"
+                  className="text-[#2b2e35] font-semibold mb-2"
+                >
+                  Exchange Rate
+                </label>
 
-                  <input
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="transactionCode"
-                    placeholder="Transaction Code"
-                    value={transactionCode}
-                    onChange={(e) => setTransactionCode(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mt-4">
-                  <label
-                    htmlFor="details"
-                    className="text-[#2b2e35] font-semibold mb-2"
-                  >
-                    Payment Mode
-                  </label>
+                <input
+                  className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                  name="exchangeRate"
+                  placeholder="Disbursement Amount"
+                  value={exchangeRate}
+                  onChange={(e) => setExchangeRate(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mt-4">
+                <label
+                  htmlFor="details"
+                  className="text-[#2b2e35] font-semibold mb-2"
+                >
+                  Transaction Code
+                </label>
 
-                  <input
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="paymentMode"
-                    placeholder="Payment Mode"
-                    value={paymentModeCode}
-                    onChange={(e) => setPaymentModeCode(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mt-4">
-                  <label
-                    htmlFor="details"
-                    className="text-[#2b2e35] font-semibold mb-2"
-                  >
-                    Date Disbursed
-                  </label>
+                <input
+                  className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                  name="transactionCode"
+                  placeholder="Transaction Code"
+                  value={transactionCode}
+                  onChange={(e) => setTransactionCode(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mt-4">
+                <label
+                  htmlFor="details"
+                  className="text-[#2b2e35] font-semibold mb-2"
+                >
+                  Payment Mode
+                </label>
 
+                <input
+                  className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                  name="paymentMode"
+                  placeholder="Payment Mode"
+                  value={paymentModeCode}
+                  onChange={(e) => setPaymentModeCode(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mt-4">
+                <label
+                  htmlFor="details"
+                  className="text-[#2b2e35] font-semibold mb-2"
+                >
+                  Date Disbursed
+                </label>
+
+                <input
+                  type="date"
+                  className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
+                  name="Date of disbursement"
+                  placeholder="Date of disbursement"
+                  value={dateDisbursed}
+                  onChange={(e) => setDateDisbursed(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <input type="file" name="file" onChange={fileUploadHandler} />
+                <button onClick={(e) => uploadFile(e)}>Generate ID</button>
+              </div>
+              <div className="w-full flex items-center mb-4">
+                <input
+                  id="approval-radio"
+                  type="radio"
+                  checked={approval}
+                  onChange={() => {
+                    setApproval(!approval);
+                    if (rejection) {
+                      setRejection(false);
+                    }
+                  }}
+                  className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
+                />
+                <label
+                  htmlFor="approval-radio"
+                  className="ml-2 font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Recommended for Approval
+                </label>
+              </div>
+              <div className="w-full flex flex-col mb-4">
+                <div className="flex items-center">
                   <input
-                    type="date"
-                    className="appearance-none block w-full text-gray-700 p-2 mb-4 leading-tight focus:outline-none border border-gray-400"
-                    name="Date of disbursement"
-                    placeholder="Date of disbursement"
-                    value={dateDisbursed}
-                    onChange={(e) => setDateDisbursed(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mt-4 flex items-center justify-between">
-                  <input type="file" name="file" onChange={fileUploadHandler} />
-                  <button onClick={(e) => uploadFile(e)}>Generate ID</button>
-                </div>
-                <div className="w-full flex items-center mb-4">
-                  <input
-                    id="approval-radio"
+                    id="rejection-checkbox"
                     type="radio"
-                    checked={approval}
+                    checked={rejection}
                     onChange={() => {
-                      setApproval(!approval);
-                      if (rejection) {
-                        setRejection(false);
+                      setRejection(!rejection);
+                      if (approval) {
+                        setApproval(false);
                       }
                     }}
                     className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
                   />
                   <label
-                    htmlFor="approval-radio"
+                    htmlFor="rejection-checkbox"
                     className="ml-2 font-medium text-gray-900 dark:text-gray-300"
                   >
-                    Recommended for Approval
+                    Recommended for Rejection
                   </label>
                 </div>
-                <div className="w-full flex flex-col mb-4">
-                  <div className="flex items-center">
-                    <input
-                      id="rejection-checkbox"
-                      type="radio"
-                      checked={rejection}
-                      onChange={() => {
-                        setRejection(!rejection);
-                        if (approval) {
-                          setApproval(false);
-                        }
-                      }}
-                      className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
-                    />
-                    <label
-                      htmlFor="rejection-checkbox"
-                      className="ml-2 font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Recommended for Rejection
-                    </label>
-                  </div>
 
-                  {rejection && (
-                    <Select
-                      options={reasons}
-                      defaultValue={rejectionReason}
-                      onChange={handleSelectReasonsChange}
-                      onInputChange={handleReasonsInputChange}
-                      isSearchable
-                    />
-                  )}
-                </div>
-                <div className="w-full">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    className=" p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border"
-                    placeholder="Write notes for approval or rejection"
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                  ></textarea>
-                </div>
+                {rejection && (
+                  <Select
+                    options={reasons}
+                    defaultValue={rejectionReason}
+                    onChange={handleSelectReasonsChange}
+                    onInputChange={handleReasonsInputChange}
+                    isSearchable
+                  />
+                )}
               </div>
-              <div className="w-full mt-4 p-2">
-                <p>Close out disbursements?</p>
-  <div className="flex flex-col">
-    <label htmlFor="disbursement-closeout-yes">
-      <input
-        type="radio"
-        id="disbursement-closeout-yes"
-        name="disbursementCloseout"
-        value="Yes"
-        checked={disbursementCloseout === true}
-        onChange={() => handleDisbursementCloseoutChange(true)}
-        className="mr-2"
-      />
-      Yes
-    </label>
-    <label htmlFor="disbursement-closeout-no">
-      <input
-        type="radio"
-        id="disbursement-closeout-no"
-        name="disbursementCloseout"
-        value="No"
-        checked={disbursementCloseout === false}
-        onChange={() => handleDisbursementCloseoutChange(false)}
-        className="mr-2"
-      />
-      No
-    </label>
-  </div>
-</div>
-              <div
-                className="bg-yellow-600 w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer font-semibold m-4"
-                onClick={() => sendDBSApproval()}
-              >
-                Submit
+              <div className="w-full">
+                <textarea
+                  id="message"
+                  rows="4"
+                  className=" p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border"
+                  placeholder="Write notes for approval or rejection"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                ></textarea>
               </div>
-            </form>
-          </div>
+            </div>
+            <div className="w-full mt-4 p-2">
+              <p>Close out disbursements?</p>
+              <div className="flex flex-col">
+                <label htmlFor="disbursement-closeout-yes">
+                  <input
+                    type="radio"
+                    id="disbursement-closeout-yes"
+                    name="disbursementCloseout"
+                    value="Yes"
+                    checked={disbursementCloseout === true}
+                    onChange={() => handleDisbursementCloseoutChange(true)}
+                    className="mr-2"
+                  />
+                  Yes
+                </label>
+                <label htmlFor="disbursement-closeout-no">
+                  <input
+                    type="radio"
+                    id="disbursement-closeout-no"
+                    name="disbursementCloseout"
+                    value="No"
+                    checked={disbursementCloseout === false}
+                    onChange={() => handleDisbursementCloseoutChange(false)}
+                    className="mr-2"
+                  />
+                  No
+                </label>
+              </div>
+            </div>
+            <div
+              className="bg-yellow-600 w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer font-semibold m-4"
+              onClick={() => sendDBSApproval()}
+            >
+              Submit
+            </div>
+          </form>
+        </div>
       );
     } else {
       return (
         <div className="font-mono w-[500px]">
-            <form className="w-full flex flex-col px-2">
-              <div className="w-[400px]">
-                <p className="font-semibold">Beneficiaries</p>
-                {formDetails?.beneficiaries?.map((user) => (
-                  <div className="grid gap-3 bg-white border shadow-lg px-3 my-4">
-                    <p>
-                      <span className="text-gray-600 text-xs">Name:</span>{" "}
-                      {user?.name}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">BVN:</span>{" "}
-                      {user?.bvn}
-                    </p>
-                    <p>
-                      <span className="text-gray-600 text-xs">
-                        Amount Requested:
-                      </span>
-                      <span className="px-2">{user?.currency?.code}</span>
-                      {user?.amountRequested}
-                    </p>
-                  </div>
-                ))}
+          <form className="w-full flex flex-col px-2">
+            <div className="w-[400px]">
+              <p className="font-semibold">Beneficiaries</p>
+              {formDetails?.beneficiaries?.map((user) => (
+                <div className="grid gap-3 bg-white border shadow-lg px-3 my-4">
+                  <p>
+                    <span className="text-gray-600 text-xs">Name:</span>{" "}
+                    {user?.name}
+                  </p>
+                  <p>
+                    <span className="text-gray-600 text-xs">BVN:</span>{" "}
+                    {user?.bvn}
+                  </p>
+                  <p>
+                    <span className="text-gray-600 text-xs">
+                      Amount Requested:
+                    </span>
+                    <span className="px-2">{user?.currency?.code}</span>
+                    {user?.amountRequested}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="w-full">
+              <div className="w-full flex items-center mb-2">
+                <input
+                  id="approval-radio"
+                  type="radio"
+                  checked={approval}
+                  onChange={() => {
+                    setApproval(!approval);
+                    if (rejection) {
+                      setRejection(false);
+                    }
+                  }}
+                  className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
+                />
+                <label
+                  htmlFor="approval-radio"
+                  className="ml-2 font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Recommended for Approval
+                </label>
               </div>
-              <div className="w-full">
-                <div className="w-full flex items-center mb-2">
+              <div className="w-full flex flex-col mb-4">
+                <div className="flex items-center">
                   <input
-                    id="approval-radio"
+                    id="rejection-checkbox"
                     type="radio"
-                    checked={approval}
+                    checked={rejection}
                     onChange={() => {
-                      setApproval(!approval);
-                      if (rejection) {
-                        setRejection(false);
+                      setRejection(!rejection);
+                      if (approval) {
+                        setApproval(false);
                       }
                     }}
                     className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
                   />
                   <label
-                    htmlFor="approval-radio"
+                    htmlFor="rejection-checkbox"
                     className="ml-2 font-medium text-gray-900 dark:text-gray-300"
                   >
-                    Recommended for Approval
+                    Recommended for Rejection
                   </label>
                 </div>
-                <div className="w-full flex flex-col mb-4">
-                  <div className="flex items-center">
-                    <input
-                      id="rejection-checkbox"
-                      type="radio"
-                      checked={rejection}
-                      onChange={() => {
-                        setRejection(!rejection);
-                        if (approval) {
-                          setApproval(false);
-                        }
-                      }}
-                      className="w-4 h-4 text-[#05A3A3] bg-gray-100 border-gray-300"
-                    />
-                    <label
-                      htmlFor="rejection-checkbox"
-                      className="ml-2 font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Recommended for Rejection
-                    </label>
-                  </div>
 
-                  {rejection && (
-                    <Select
-                      options={reasons}
-                      defaultValue={rejectionReason}
-                      onChange={handleSelectReasonsChange}
-                      onInputChange={handleReasonsInputChange}
-                      isSearchable
-                    />
-                    // <select
-                    //   className="w-[350px] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border mt-2"
-                    //   value={rejectionReason}
-                    //   onChange={(e) => setRejectionReason(e.target.value)}
-                    // >
-                    //   <option value="">Select rejection reason</option>
+                {rejection && (
+                  <Select
+                    options={reasons}
+                    defaultValue={rejectionReason}
+                    onChange={handleSelectReasonsChange}
+                    onInputChange={handleReasonsInputChange}
+                    isSearchable
+                  />
+                  // <select
+                  //   className="w-[350px] p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border mt-2"
+                  //   value={rejectionReason}
+                  //   onChange={(e) => setRejectionReason(e.target.value)}
+                  // >
+                  //   <option value="">Select rejection reason</option>
 
-                    // </select>
-                  )}
-                </div>
-                <div className="w-full">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    className=" p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border"
-                    placeholder="Write notes for approval or rejection"
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                  ></textarea>
-                </div>
+                  // </select>
+                )}
               </div>
-
-              <div
-                className="bg-yellow-600 w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer font-semibold m-4"
-                onClick={() => sendApproval()}
-              >
-                Submit
+              <div className="w-full">
+                <textarea
+                  id="message"
+                  rows="4"
+                  className=" p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border"
+                  placeholder="Write notes for approval or rejection"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                ></textarea>
               </div>
-            </form>
-          </div>
+            </div>
+
+            <div
+              className="bg-yellow-600 w-[170px] h-[48px] rounded text-white flex items-center justify-center cursor-pointer font-semibold m-4"
+              onClick={() => sendApproval()}
+            >
+              Submit
+            </div>
+          </form>
+        </div>
       );
     }
   };
@@ -666,21 +663,15 @@ const ReviewerFormADetails = () => {
                   {formDetails?.processingFeeAccountNumber}
                 </p>
                 <p>
-                  <span className="text-gray-600 text-xs">
-                     Account Name:
-                  </span>{" "}
+                  <span className="text-gray-600 text-xs">Account Name:</span>{" "}
                   {accountInfo?.customerName}
                 </p>
                 <p>
-                  <span className="text-gray-600 text-xs">
-                    Account Class:
-                  </span>{" "}
+                  <span className="text-gray-600 text-xs">Account Class:</span>{" "}
                   {accountInfo?.accountClassDescription}
                 </p>
                 <p>
-                  <span className="text-gray-600 text-xs">
-                    Account BVN:
-                  </span>{" "}
+                  <span className="text-gray-600 text-xs">Account BVN:</span>{" "}
                   {accountInfo?.bvnNumber}
                 </p>
                 <p>
@@ -832,7 +823,7 @@ const ReviewerFormADetails = () => {
           ))} */}
         </div>
         <Modal isVisible={modal} onClose={() => setModal(false)}>
-        {renderModalContent()}
+          {renderModalContent()}
         </Modal>
       </div>
     </>

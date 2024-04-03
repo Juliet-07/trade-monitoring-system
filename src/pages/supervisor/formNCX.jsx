@@ -129,7 +129,9 @@ const SupervisorFormNCX = () => {
                         <FaEye
                           onClick={() => {
                             setSelectedRowData(ncx.id);
-                            navigate(`/supervisor/formNcxDetails/${ncx.formId}`);
+                            navigate(
+                              `/supervisor/formNcxDetails/${ncx.formId}`
+                            );
                           }}
                         />
                       </span>

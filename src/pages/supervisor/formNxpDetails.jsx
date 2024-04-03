@@ -35,31 +35,33 @@ const SupervisorFormNxpDetails = () => {
       })
       .catch((err) => console.log(err));
   };
- 
+
   const debitUser = () => {
     const url = "http://192.168.207.18:4248/api/Funds/ChargesCollection";
     const payload = {
       formID: ID,
       applicationNumber: formDetails?.applicationNumber,
       formType: "Form NXP",
-      createdBy: userName
+      createdBy: userName,
     };
-  
+
     console.log(payload);
-    
+
     // Return a promise
     return new Promise((resolve, reject) => {
-      axios.post(url, payload, {
-        headers: {
-          ApiKey: "E1A7F6B0EE30FDE1E0530FC9A8C05DA3E1A7F6B0EE31FDE1E0530FC9A8C05DA3A2F5BCE0531ECFA8C0532DF5EA644B5DA3F5BCE0531ECXzaMiYitfbK2oDjUJSU38RcXhExB7oycks/0/FnAzbB4u6SRMOPiaMM3on2wPor35agI7RRt0U4rckdzdiYDhXDL2LigoWkx97cGaOsqPN",
-          "Content-type": "application/json",
-        },
-      })
-      .then(resolve)  // Resolve with the response
-      .catch(reject); // Reject with the error
+      axios
+        .post(url, payload, {
+          headers: {
+            ApiKey:
+              "E1A7F6B0EE30FDE1E0530FC9A8C05DA3E1A7F6B0EE31FDE1E0530FC9A8C05DA3A2F5BCE0531ECFA8C0532DF5EA644B5DA3F5BCE0531ECXzaMiYitfbK2oDjUJSU38RcXhExB7oycks/0/FnAzbB4u6SRMOPiaMM3on2wPor35agI7RRt0U4rckdzdiYDhXDL2LigoWkx97cGaOsqPN",
+            "Content-type": "application/json",
+          },
+        })
+        .then(resolve) // Resolve with the response
+        .catch(reject); // Reject with the error
     });
   };
-  
+
   // const sendApproval = () => {
   //   const url = `${baseURL}/Supervisor/ADBSupervisorFormNXPApproval?applicationNumber=${formDetails?.applicationNumber}&formID=${ID}&formTypeName=Form NXP`;
   //   const payload = {
@@ -95,15 +97,15 @@ const SupervisorFormNxpDetails = () => {
       daemonSupervisorName: userName,
       rejectionReasonCode: rejection ? rejectionReason.label : null,
     };
-  
+
     console.log(payload);
-    
+
     // Call debitUser function and chain the promise
     debitUser()
       .then((debitResponse) => {
         console.log(debitResponse, "Debit response");
         // Proceed with sendApproval if debit response is successful
-        alert(`Debit Response: ${debitResponse.data.message}`)
+        alert(`Debit Response: ${debitResponse.data.message}`);
         return axios.post(url, payload, {
           headers: {
             Authorization: `Bearer ${token}`,

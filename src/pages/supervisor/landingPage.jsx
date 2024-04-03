@@ -34,7 +34,6 @@ const SupervisorFormNXP = () => {
   const nPages = Math.ceil(processedNXP.length / recordsPerProcessedPage);
   const numbersForProcessed = [...Array(npages + 1).keys()].slice(1);
 
-  
   const GetPendingNXP = () => {
     const url = `${baseURL}/Supervisor/ADBSupervisorPendingFormNXP`;
     let data;
@@ -135,7 +134,9 @@ const SupervisorFormNXP = () => {
                         <FaEye
                           onClick={() => {
                             setSelectedRowData(nxp.id);
-                            navigate(`/supervisor/formNxpDetails/${nxp.formId}`);
+                            navigate(
+                              `/supervisor/formNxpDetails/${nxp.formId}`
+                            );
                           }}
                         />
                       </span>

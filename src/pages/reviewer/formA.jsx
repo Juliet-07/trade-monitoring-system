@@ -33,11 +33,10 @@ const ReviewerFormA = () => {
   const dbs_numbers = [...Array(dbs_npages + 1).keys()].slice(1);
 
   // for logic to paginate processed table
-  const processedRecords = processedFormA.slice(firstIndex, lastIndex );
+  const processedRecords = processedFormA.slice(firstIndex, lastIndex);
   const nPages = Math.ceil(processedFormA.length / recordsPerPage);
   const numbersForProcessed = [...Array(nPages + 1).keys()].slice(1);
 
- 
   const GetPendingFormA = () => {
     const url = `${baseURL}/v1/FormA/PendingFormAList`;
     let data;
@@ -109,7 +108,7 @@ const ReviewerFormA = () => {
   useEffect(() => {
     GetPendingFormA();
     GetProcessedFormA();
-    GetDBSPendingFormA()
+    GetDBSPendingFormA();
   }, []);
   return (
     <Layout>
@@ -206,7 +205,9 @@ const ReviewerFormA = () => {
 
       <div className="text-3xl font-semibold text-red-800 font-mono">
         <div className="shadow py-2 px-2">
-          <h4 className="text-sm mb-5">Pending Applications For Disbursement</h4>
+          <h4 className="text-sm mb-5">
+            Pending Applications For Disbursement
+          </h4>
           <table className="w-full text-sm border-collapse border-t-[1px] rounded-sm text-gray-700">
             <thead className="border-b">
               <tr className="text-center">
