@@ -32,7 +32,7 @@ const SupervisorFormA = () => {
 
   // for logic to paginate processed table
   const processedRecords = processedFormA.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(processedFormA.length / recordsPerProcessedPage);
+  const nPages = Math.ceil(processedFormA.length / recordsPerPage);
   const numbersForProcessed = [...Array(nPages + 1).keys()].slice(1);
 
   const GetPendingFormA = () => {
