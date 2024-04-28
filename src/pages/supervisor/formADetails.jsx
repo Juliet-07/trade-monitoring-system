@@ -13,6 +13,7 @@ const SupervisorFormADetails = () => {
   const userInfo = JSON.parse(localStorage.getItem("trmsUser"));
   const token = userInfo.token;
   const userName = userInfo.userName;
+  const userEmail = userInfo.email
   const [formDetails, setFormDetails] = useState({});
   const [modal, setModal] = useState(false);
   const [approval, setApproval] = useState(false);
@@ -75,14 +76,15 @@ const SupervisorFormADetails = () => {
   };
 
   const sendApproval = () => {
-    const url = `${baseURL}/Supervisor/ADBSupervisorFormAApproval?applicationNumber=${formDetails?.applicationNumber}`;
+    // const url = `${baseURL}/Supervisor/ADBSupervisorFormAApproval?applicationNumber=${formDetails?.applicationNumber}`;
+    const url = `${baseURL}/Supervisor/ADBSupervisorFormAApproval`;
     const payload = {
       approved: approval,
       note: note,
       formID: ID,
       applicationNumber: formDetails?.applicationNumber,
       rejectionReasonCode: rejection ? rejectionReason.label : "Not Rejected",
-      disbursmentSupervisorEmail: userName,
+      disbursmentSupervisorEmail: userEmail,
     };
 
     console.log(payload);

@@ -117,8 +117,9 @@ const ReviewerFormADetails = () => {
       //customerNairaAccountNo: formDetails.accountNumber,
       customerNairaAccountNo: "0070001060",
       applicantName: formDetails?.applicantName,
+      beneficiaryId:"1",
+      bvn:formDetails?.applicantTINBVN
     };
-
     console.log(payload);
     axios
       .post(url, payload, {
