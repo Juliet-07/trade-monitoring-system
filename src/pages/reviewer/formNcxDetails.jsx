@@ -105,6 +105,8 @@ const ReviewerFormNCXDetails = () => {
       //customerNairaAccountNo: formDetails.accountNumber,
       customerNairaAccountNo: "0070001060",
       applicantName: formDetails?.contact?.firstName,
+      beneficiaryId:formDetails?.beneficiaries[0]?.id.toString(),
+      bvn:formDetails?.contact?.bvn
     };
 
     console.log(payload);

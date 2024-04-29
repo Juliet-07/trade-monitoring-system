@@ -117,7 +117,7 @@ const ReviewerFormADetails = () => {
       //customerNairaAccountNo: formDetails.accountNumber,
       customerNairaAccountNo: "0070001060",
       applicantName: formDetails?.applicantName,
-      beneficiaryId:"1",
+      beneficiaryId:formDetails?.beneficiaries[0]?.id.toString(),
       bvn:formDetails?.applicantTINBVN
     };
     console.log(payload);
@@ -189,6 +189,7 @@ const ReviewerFormADetails = () => {
       transactionCode: transactionCode,
       paymentMode: paymentModeCode,
       disbursementCloseout: disbursementCloseout,
+      transactionCodeFileId:fileID
     };
 
     console.log(payload);
